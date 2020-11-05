@@ -273,9 +273,9 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 	@Nullable
 	public EnchantTier getTierByChance() {
 		Map<EnchantTier, Double> map = new HashMap<>();
-		for (EnchantTier t : this.tiers.values()) {
-			if (t.getChance() <= 0) continue;
-			map.put(t, t.getChance());
+		for (EnchantTier tier : this.tiers.values()) {
+			if (tier.getChance() <= 0) continue;
+			map.put(tier, tier.getChance());
 		}
 		
 		return Rnd.getRandomItem(map, true);
