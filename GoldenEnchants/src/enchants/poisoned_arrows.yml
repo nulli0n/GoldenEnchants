@@ -1,0 +1,13 @@
+name: 'Poisoned Arrows'
+tier: 'common'
+level:
+  min: 1
+  max: 3
+enchantment-table:
+  min-player-level: 15
+  chance: 45.0
+settings:
+  enchant-trigger-chance: '45.0'
+  arrow-trail: 'SLIME'
+  effect-level: '%level%'
+  effect-duration: '2.0 * %level%'
