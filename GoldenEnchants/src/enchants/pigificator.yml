@@ -1,0 +1,12 @@
+name: 'Pigificator'
+tier: 'common'
+level:
+  min: 1
+  max: 5
+enchantment-table:
+  min-player-level: 20
+  chance: 20.0
+settings:
+  enchant-trigger-chance: '20.0 * %level%'
+  effect-particle: 'CLOUD'
+  effect-sound: 'ENTITY_PIG_AMBIENT'

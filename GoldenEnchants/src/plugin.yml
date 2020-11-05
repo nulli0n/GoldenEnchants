@@ -1,0 +1,8 @@
+main: su.nightexpress.goldenenchants.GoldenEnchants
+version: 2.8.0
+name: GoldenEnchants
+author: NightExpress
+desciption: Vanilla-like enchants for your server.
+depend: [FogusCore]
+api-version: 1.14
+load: STARTUP

@@ -1,0 +1,13 @@
+name: 'Paralyze'
+tier: 'legendary'
+level:
+  min: 1
+  max: 2
+enchantment-table:
+  min-player-level: 15
+  chance: 10.0
+settings:
+  particle-effect: 'CRIT_MAGIC'
+  enchant-trigger-chance: '5.0'
+  effect-level: '5'
+  effect-duration: '%level% * 2'
