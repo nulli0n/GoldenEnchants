@@ -22,7 +22,8 @@ public class ArrowTrailsTask extends ITask<GoldenEnchants> {
 		TRAILS_MAP.clear();
 	}
 	
-    public void action() {
+    @Override
+	public void action() {
     	for (Map.Entry<Projectile, List<String>> e : new HashMap<>(TRAILS_MAP).entrySet()) {
     		Projectile pj = e.getKey();
         	if (pj.isOnGround() || !pj.isValid()) {

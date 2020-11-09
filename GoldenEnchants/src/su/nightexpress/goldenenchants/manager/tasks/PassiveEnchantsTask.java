@@ -21,7 +21,8 @@ public class PassiveEnchantsTask extends ITask<GoldenEnchants> {
 		super(plugin, Config.GEN_TASK_PASSIVE_ENCHANT_TICK_TIME, false);
 	}
 	
-    public void action() {
+    @Override
+	public void action() {
     	for (LivingEntity entity : this.getEntities()) {
     		for (ItemStack armor : EntityUT.getEquipment(entity)) {
     			if (armor == null) continue;
