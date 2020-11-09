@@ -17,10 +17,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
-import su.fogus.engine.utils.MsgUT;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.MsgUT;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -97,7 +97,7 @@ public class EnchantCutter extends IEnchantChanceTemplate implements CombatEncha
 		drop.setPickupDelay(40);
 		drop.getVelocity().multiply(3D);
 		
-		LocUT.playEffect(victim.getEyeLocation(), "ITEM_CRACK:" + cut.getType().name(), 0.2f, 0.15f, 0.2f, 0.15f, 40);
+		EffectUT.playEffect(victim.getEyeLocation(), "ITEM_CRACK:" + cut.getType().name(), 0.2f, 0.15f, 0.2f, 0.15f, 40);
 		MsgUT.sound(victim.getLocation(), Sound.BLOCK_ANVIL_BREAK.name());
 	}
 }

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.config.api.IConfigTemplate;
+import su.nexmedia.engine.config.api.IConfigTemplate;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 
 public class Config extends IConfigTemplate {

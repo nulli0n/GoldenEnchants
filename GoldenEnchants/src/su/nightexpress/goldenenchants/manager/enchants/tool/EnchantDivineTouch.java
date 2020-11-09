@@ -15,9 +15,10 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
-import su.fogus.engine.utils.StringUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.LocUT;
+import su.nexmedia.engine.utils.StringUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
@@ -87,6 +88,6 @@ public class EnchantDivineTouch extends IEnchantChanceTemplate implements BlockE
 		spawner.setItemMeta(meta);
 		
 		world.dropItemNaturally(l, spawner);
-		LocUT.playEffect(l, "VILLAGER_HAPPY", 0.3f, 0.3f, 0.3f, 0.15f, 30);
+		EffectUT.playEffect(l, "VILLAGER_HAPPY", 0.3f, 0.3f, 0.3f, 0.15f, 30);
 	}
 }

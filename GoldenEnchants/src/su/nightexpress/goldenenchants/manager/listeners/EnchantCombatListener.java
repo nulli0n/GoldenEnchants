@@ -19,9 +19,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.manager.JListener;
-import su.fogus.engine.utils.EntityUT;
-import su.fogus.engine.utils.ItemUT;
+import su.nexmedia.engine.manager.IListener;
+import su.nexmedia.engine.utils.EntityUT;
+import su.nexmedia.engine.utils.ItemUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.EnchantManager;
 import su.nightexpress.goldenenchants.manager.enchants.api.BowEnchant;
@@ -29,7 +29,7 @@ import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
 import su.nightexpress.goldenenchants.manager.enchants.api.DeathEnchant;
 import su.nightexpress.goldenenchants.manager.enchants.api.LocationEnchant;
 
-public class EnchantCombatListener extends JListener<GoldenEnchants> {
+public class EnchantCombatListener extends IListener<GoldenEnchants> {
 
 	private EnchantManager enchantManager;
 	

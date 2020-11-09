@@ -2,11 +2,10 @@ package su.nightexpress.goldenenchants;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.FogusPlugin;
-import su.fogus.engine.commands.api.IGeneralCommand;
-import su.fogus.engine.core.PluginType;
-import su.fogus.engine.core.Version;
-import su.fogus.engine.utils.Reflex;
+import su.nexmedia.engine.NexPlugin;
+import su.nexmedia.engine.commands.api.IGeneralCommand;
+import su.nexmedia.engine.core.Version;
+import su.nexmedia.engine.utils.Reflex;
 import su.nightexpress.goldenenchants.commands.BookCommand;
 import su.nightexpress.goldenenchants.commands.EnchantCommand;
 import su.nightexpress.goldenenchants.commands.ListCommand;
@@ -16,7 +15,7 @@ import su.nightexpress.goldenenchants.config.Lang;
 import su.nightexpress.goldenenchants.manager.EnchantManager;
 import su.nightexpress.goldenenchants.nms.EnchantNMS;
 
-public class GoldenEnchants extends FogusPlugin<GoldenEnchants> {
+public class GoldenEnchants extends NexPlugin<GoldenEnchants> {
 	
 	private static GoldenEnchants inst;
 	
@@ -119,11 +118,5 @@ public class GoldenEnchants extends FogusPlugin<GoldenEnchants> {
 	@NotNull
 	public EnchantNMS getNMSHandler() {
 		return nmsHandler;
-	}
-
-	@Override
-	@NotNull
-	public PluginType getType() {
-		return PluginType.GOLD;
 	}
 }

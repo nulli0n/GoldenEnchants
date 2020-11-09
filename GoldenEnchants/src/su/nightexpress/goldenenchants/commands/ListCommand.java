@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.commands.api.ISubCommand;
-import su.fogus.engine.utils.ClickText;
-import su.fogus.engine.utils.CollectionsUT;
+import su.nexmedia.engine.commands.api.ISubCommand;
+import su.nexmedia.engine.utils.ClickText;
+import su.nexmedia.engine.utils.CollectionsUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
 import su.nightexpress.goldenenchants.manager.EnchantRegister;
@@ -19,7 +19,7 @@ import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
 public class ListCommand extends ISubCommand<GoldenEnchants> {
 
 	public ListCommand(@NotNull GoldenEnchants plugin) {
-		super(plugin, Perms.ADMIN);
+		super(plugin, new String[] {"list"}, Perms.ADMIN);
 	}
 	
 	@Override
@@ -31,12 +31,6 @@ public class ListCommand extends ISubCommand<GoldenEnchants> {
 	@NotNull
 	public String description() {
 		return plugin.lang().Command_List_Desc.getMsg();
-	}
-
-	@Override
-	@NotNull
-	public String @NotNull [] labels() {
-		return new String[] {"list"};
 	}
 
 	@Override
@@ -81,11 +75,11 @@ public class ListCommand extends ISubCommand<GoldenEnchants> {
     				
     				ct.createPlaceholder("%button_book%", plugin.lang().Command_List_Button_Book_Name.getMsg())
     				.hint(plugin.lang().Command_List_Button_Book_Hint.getMsg())
-    				.execCmd("/" + plugin.label() + " book" + " " + sender.getName() + " " + ge.getKey().getKey() + " " + ge.getMaxLevel());
+    				.execCmd("/" + plugin.getLabel() + " book" + " " + sender.getName() + " " + ge.getKey().getKey() + " " + ge.getMaxLevel());
     				
     				ct.createPlaceholder("%button_enchant%", plugin.lang().Command_List_Button_Enchant_Name.getMsg())
     				.hint(plugin.lang().Command_List_Button_Enchant_Hint.getMsg())
-    				.execCmd("/" + plugin.label() + " enchant" + " " + ge.getKey().getKey() + " " + ge.getMaxLevel());
+    				.execCmd("/" + plugin.getLabel() + " enchant" + " " + ge.getKey().getKey() + " " + ge.getMaxLevel());
     				
     				ct.send(sender);
     			}

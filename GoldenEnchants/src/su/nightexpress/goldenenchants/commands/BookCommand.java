@@ -13,29 +13,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.commands.api.ISubCommand;
-import su.fogus.engine.utils.ItemUT;
-import su.fogus.engine.utils.PlayerUT;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.commands.api.ISubCommand;
+import su.nexmedia.engine.utils.ItemUT;
+import su.nexmedia.engine.utils.PlayerUT;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
 
 public class BookCommand extends ISubCommand<GoldenEnchants> {
 	
 	public BookCommand(@NotNull GoldenEnchants plugin) {
-		super(plugin, Perms.ADMIN);
+		super(plugin, new String[] {"book"}, Perms.ADMIN);
 	}
 	
 	@Override
 	@NotNull
 	public String description() {
 		return plugin.lang().Command_Book_Desc.getMsg();
-	}
-
-	@Override
-	@NotNull
-	public String @NotNull [] labels() {
-		return new String[] {"book"};
 	}
 
 	@Override

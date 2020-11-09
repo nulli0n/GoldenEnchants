@@ -15,11 +15,11 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Sets;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.core.Version;
-import su.fogus.engine.utils.NumberUT;
-import su.fogus.engine.utils.StringUT;
-import su.fogus.engine.utils.eval.Evaluator;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.core.Version;
+import su.nexmedia.engine.utils.NumberUT;
+import su.nexmedia.engine.utils.StringUT;
+import su.nexmedia.engine.utils.eval.Evaluator;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.EnchantTier;
@@ -136,7 +136,7 @@ public abstract class GoldenEnchant extends Enchantment {
 		Set<String> lvlKeys = cfg.getSection(path2);
 		if (!lvlKeys.isEmpty()) {
 			for (String sLvl : lvlKeys) {
-				int eLvl = StringUT.getNumI(sLvl, 0);
+				int eLvl = StringUT.getInteger(sLvl, 0);
 				if (eLvl < this.getStartLevel() || eLvl > this.getMaxLevel()) continue;
 				
 				String formula = cfg.getString(path2 + "." + sLvl, "0").replace("%level%", sLvl);

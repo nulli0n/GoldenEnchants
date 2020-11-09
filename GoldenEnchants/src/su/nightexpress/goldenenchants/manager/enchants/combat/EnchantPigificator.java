@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
-import su.fogus.engine.utils.MsgUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.MsgUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.EnchantRegister;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
@@ -41,7 +41,7 @@ public class EnchantPigificator extends IEnchantChanceTemplate implements Combat
 		
 		e.setCancelled(true);
 		
-		LocUT.playEffect(victim.getLocation(), this.effect, 0.25, 0.25, 0.25, 0.1f, 30);
+		EffectUT.playEffect(victim.getLocation(), this.effect, 0.25, 0.25, 0.25, 0.1f, 30);
 		MsgUT.sound(victim.getLocation(), this.sound);
 		
 		victim.getWorld().spawn(victim.getLocation(), Pig.class);

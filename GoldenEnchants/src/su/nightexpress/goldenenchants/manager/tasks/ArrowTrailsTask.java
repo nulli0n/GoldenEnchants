@@ -8,8 +8,8 @@ import java.util.Map;
 import org.bukkit.entity.Projectile;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.manager.api.tasks.ITask;
-import su.fogus.engine.utils.LocUT;
+import su.nexmedia.engine.manager.api.task.ITask;
+import su.nexmedia.engine.utils.EffectUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 
@@ -30,7 +30,7 @@ public class ArrowTrailsTask extends ITask<GoldenEnchants> {
         		continue;
         	}
         	for (String effect : e.getValue()) {
-        		LocUT.playEffect(pj.getLocation(), effect, 0f, 0f, 0f, 0f, 10);
+        		EffectUT.playEffect(pj.getLocation(), effect, 0f, 0f, 0f, 0f, 10);
         	}
         }
     }

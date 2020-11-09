@@ -14,13 +14,13 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.manager.JListener;
-import su.fogus.engine.utils.ItemUT;
+import su.nexmedia.engine.manager.IListener;
+import su.nexmedia.engine.utils.ItemUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.EnchantManager;
 import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
 
-public class EnchantToolListener extends JListener<GoldenEnchants> {
+public class EnchantToolListener extends IListener<GoldenEnchants> {
 
 	//private EnchantManager enchantManager;
 	

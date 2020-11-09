@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
+import su.nexmedia.engine.config.api.JYML;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.ICombatEnchantPotionTemplate;
 

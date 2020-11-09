@@ -8,8 +8,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.ItemUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.ItemUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantPotionTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;

@@ -9,8 +9,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
 
@@ -50,6 +50,6 @@ public abstract class ICombatEnchantPotionTemplate extends IEnchantPotionTemplat
 		
 		PotionEffect pet = new PotionEffect(this.effectType, bTime, bLvl);
 		this.addPotionEffect(victim, pet, true);
-		LocUT.playEffect(victim.getEyeLocation(), this.optParticleName, 0.2f, 0.15f, 0.2f, 0.1f, 40);
+		EffectUT.playEffect(victim.getEyeLocation(), this.optParticleName, 0.2f, 0.15f, 0.2f, 0.1f, 40);
 	}
 }

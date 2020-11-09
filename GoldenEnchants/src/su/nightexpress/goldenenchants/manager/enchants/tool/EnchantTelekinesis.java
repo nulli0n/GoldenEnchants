@@ -12,9 +12,9 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.ItemUT;
-import su.fogus.engine.utils.LocUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.ItemUT;
+import su.nexmedia.engine.utils.LocUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;

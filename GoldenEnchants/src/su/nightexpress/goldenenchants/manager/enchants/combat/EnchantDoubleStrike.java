@@ -10,9 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
-import su.fogus.engine.utils.MsgUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.MsgUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -63,7 +63,7 @@ public class EnchantDoubleStrike extends IEnchantChanceTemplate implements Comba
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		e.setDamage(e.getDamage() * 2);
-		LocUT.playEffect(victim.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 20);
+		EffectUT.playEffect(victim.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 20);
 		MsgUT.sound(victim.getLocation(), this.enchantSound);
 	}
 }

@@ -2,7 +2,7 @@ package su.nightexpress.goldenenchants.config;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.config.api.ILangTemplate;
+import su.nexmedia.engine.config.api.ILangTemplate;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 
 public class Lang extends ILangTemplate {

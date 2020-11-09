@@ -10,8 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.Reflex;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.Reflex;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;

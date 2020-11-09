@@ -15,8 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.LocUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
@@ -105,7 +106,7 @@ public class EnchantSmelter extends IEnchantChanceTemplate implements BlockEncha
 	    Location loc = LocUT.getCenter(b.getLocation(), false);
 	    b.getWorld().dropItem(loc, item);
 		b.getWorld().playSound(loc, Sound.BLOCK_LAVA_EXTINGUISH, 0.7f, 0.7f);
-		LocUT.playEffect(loc, "FLAME", 0.2f, 0.2f, 0.2f, 0.03f, 30);
+		EffectUT.playEffect(loc, "FLAME", 0.2f, 0.2f, 0.2f, 0.03f, 30);
 		
 		p.getInventory().setItemInMainHand(plugin.getNMS().damageItem(tool, 1, p));
 	}

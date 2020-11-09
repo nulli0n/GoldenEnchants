@@ -2,7 +2,7 @@ package su.nightexpress.goldenenchants.manager;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.utils.StringUT;
+import su.nexmedia.engine.utils.StringUT;
 
 public class EnchantTier {
 

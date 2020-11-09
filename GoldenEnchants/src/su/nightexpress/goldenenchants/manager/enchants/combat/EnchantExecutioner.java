@@ -20,9 +20,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
-import su.fogus.engine.utils.StringUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.StringUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.DeathEnchant;
@@ -110,7 +110,7 @@ public class EnchantExecutioner extends IEnchantChanceTemplate implements DeathE
 		}
 		victim.getWorld().dropItemNaturally(victim.getLocation(), item);
 		
-		LocUT.playEffect(victim.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 40);
+		EffectUT.playEffect(victim.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 40);
 	}
 	
 	@NotNull

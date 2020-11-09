@@ -14,10 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.CollectionsUT;
-import su.fogus.engine.utils.StringUT;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.CollectionsUT;
+import su.nexmedia.engine.utils.StringUT;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.DeathEnchant;
@@ -48,8 +48,8 @@ public class EnchantScavenger extends IEnchantChanceTemplate implements DeathEnc
 				
 				String path = "settings.treasures." + eId + "." + itemId + ".";
 				String[] amountSplit = cfg.getString(path + "amount", "1:1").split(":");
-				int amountMin = StringUT.getNumI(amountSplit[0], 1);
-				int amountMax = StringUT.getNumI(amountSplit[1], 1);
+				int amountMin = StringUT.getInteger(amountSplit[0], 1);
+				int amountMax = StringUT.getInteger(amountSplit[1], 1);
 				int[] amount = new int[] {amountMin, amountMax};
 				
 				double chance = cfg.getDouble(path + "chance");

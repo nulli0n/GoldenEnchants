@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.manager.api.tasks.ITask;
-import su.fogus.engine.utils.EntityUT;
+import su.nexmedia.engine.manager.api.task.ITask;
+import su.nexmedia.engine.utils.EntityUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;

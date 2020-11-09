@@ -15,10 +15,10 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.manager.api.IManager;
-import su.fogus.engine.utils.ItemUT;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.manager.IManager;
+import su.nexmedia.engine.utils.ItemUT;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;

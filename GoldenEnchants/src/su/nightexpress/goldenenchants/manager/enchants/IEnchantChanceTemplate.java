@@ -5,8 +5,8 @@ import java.util.TreeMap;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 
 public abstract class IEnchantChanceTemplate extends GoldenEnchant {

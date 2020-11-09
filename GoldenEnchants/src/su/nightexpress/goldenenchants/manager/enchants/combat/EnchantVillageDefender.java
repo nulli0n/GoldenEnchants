@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.fogus.engine.config.api.JYML;
-import su.fogus.engine.utils.LocUT;
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.EffectUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -44,7 +44,7 @@ public class EnchantVillageDefender extends IEnchantChanceTemplate implements Co
 		double damageHas = e.getDamage();
 		
 		e.setDamage(this.dmgAsModifier ? (damageHas * damageAdd) : (damageHas + damageAdd));
-		LocUT.playEffect(victim.getEyeLocation(), this.effectParticle, 0.15, 0.15, 0.15, 0.13f, 3);
+		EffectUT.playEffect(victim.getEyeLocation(), this.effectParticle, 0.15, 0.15, 0.15, 0.13f, 3);
 	}
 
 	@Override

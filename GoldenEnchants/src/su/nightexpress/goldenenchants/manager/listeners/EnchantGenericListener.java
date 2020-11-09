@@ -21,9 +21,9 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import su.fogus.engine.manager.JListener;
-import su.fogus.engine.utils.ItemUT;
-import su.fogus.engine.utils.random.Rnd;
+import su.nexmedia.engine.manager.IListener;
+import su.nexmedia.engine.utils.ItemUT;
+import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.EnchantManager;
@@ -31,7 +31,7 @@ import su.nightexpress.goldenenchants.manager.EnchantRegister;
 import su.nightexpress.goldenenchants.manager.EnchantTier;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
 
-public class EnchantGenericListener extends JListener<GoldenEnchants> {
+public class EnchantGenericListener extends IListener<GoldenEnchants> {
 
 	private static final BlockFace[] FACES = new BlockFace[] {
 			BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST};
