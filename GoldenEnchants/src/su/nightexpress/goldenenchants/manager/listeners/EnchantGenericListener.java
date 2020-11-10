@@ -114,6 +114,7 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 			
 			GoldenEnchant enchant = this.enchantManager.getEnchantByTier(tier.getId(), e.getExpLevelCost());
 			if (enchant == null) continue;
+			if (e.getEnchantsToAdd().keySet().stream().anyMatch(add -> add.conflictsWith(enchant) || enchant.conflictsWith(add))) continue;
 			
 			int lvl = Rnd.get(enchant.getStartLevel(), enchant.getMaxLevel());
 			if (!this.enchantManager.canEnchant(target, enchant, lvl)) continue;
