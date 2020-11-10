@@ -60,7 +60,9 @@ public class EnchantSaturation extends IEnchantChanceTemplate implements Passive
 	
 	@Override
 	public void use(LivingEntity user, int lvl) {
+		if (!(user instanceof Player)) return;
 		if (!this.checkTriggerChance(lvl)) return;
+		
 		
 		Player target = (Player) user;
 		int amount = (int) this.getSaturationAmount(lvl);
