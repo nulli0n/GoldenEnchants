@@ -28,8 +28,8 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 	private static final int[][] MINING_COORD_OFFSETS = new int[][]
 		{
 			{0, 0},
-			{-1, 0},
 			{0, -1},
+			{-1, 0},
 			{0, 1},
 			{1, 0},
 			{-1, -1},
@@ -95,8 +95,10 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 		// Mine + shape if Tunnel I, 3x3 if Tunnel II
 		int blocksBroken = 1;
 		if (lvl == 1) {
-			blocksBroken = 5;
+			blocksBroken = 2;
 		} else if (lvl == 2) {
+			blocksBroken = 5;
+		} else if (lvl == 3) {
 			blocksBroken = 9;
 		}
 
