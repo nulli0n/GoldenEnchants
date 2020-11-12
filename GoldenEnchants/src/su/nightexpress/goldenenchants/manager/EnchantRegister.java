@@ -1,8 +1,8 @@
 package su.nightexpress.goldenenchants.manager;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.NamespacedKey;
@@ -62,8 +62,8 @@ import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantTunnel;
 
 public class EnchantRegister {
 
-	private static GoldenEnchants plugin;
-	public static final Set<GoldenEnchant> ENCHANT_LIST = new HashSet<>();
+	private static final GoldenEnchants 		PLUGIN;
+	public static final Set<GoldenEnchant> 		ENCHANT_LIST;
 	
 	public static final EnchantBlastMining 		BLAST_MINING;
 	public static final EnchantDivineTouch 		DIVINE_TOUCH;
@@ -114,8 +114,9 @@ public class EnchantRegister {
 	public static final EnchantExplosiveArrows 	EXPLOSIVE_ARROWS;
 	
 	static {
-		plugin = GoldenEnchants.getInstance();
-		plugin.getConfigManager().extract("enchants");
+		PLUGIN = GoldenEnchants.getInstance();
+		PLUGIN.getConfigManager().extract("enchants");
+		ENCHANT_LIST = new HashSet<>();
 		
 		/*for (Field f : EnchantRegister.class.getFields()) {
 			if (!GoldenEnchant.class.isAssignableFrom(f.getType())) continue;
@@ -191,9 +192,9 @@ public class EnchantRegister {
 		String enchantId = id.toLowerCase();
 		if (Config.GEN_ENCHANTS_DISABLED.contains(id)) return null;
 		
-		JYML enchantCfg = JYML.loadOrExtract(plugin, "/enchants/" + enchantId + ".yml");
+		JYML enchantCfg = JYML.loadOrExtract(PLUGIN, "/enchants/" + enchantId + ".yml");
 		try {
-			T goldenEnchant = clazz.getConstructor(GoldenEnchants.class, JYML.class).newInstance(plugin, enchantCfg);
+			T goldenEnchant = clazz.getConstructor(GoldenEnchants.class, JYML.class).newInstance(PLUGIN, enchantCfg);
 			return goldenEnchant;
 		}
 		catch (ReflectiveOperationException ex) {
@@ -215,13 +216,13 @@ public class EnchantRegister {
 		ENCHANT_LIST.clear();
 		Reflex.setFieldValue(Enchantment.class, "acceptingNew", true);
 		
-		for (Field f : EnchantRegister.class.getFields()) {
-			if (!GoldenEnchant.class.isAssignableFrom(f.getType())) continue;
+		for (Field field : EnchantRegister.class.getFields()) {
+			if (!GoldenEnchant.class.isAssignableFrom(field.getType())) continue;
 			
-			GoldenEnchant ge;
+			GoldenEnchant enchant;
 			try {
-				ge = (GoldenEnchant) f.get(null);
-				EnchantRegister.register(ge);
+				enchant = (GoldenEnchant) field.get(null);
+				EnchantRegister.register(enchant);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -229,32 +230,21 @@ public class EnchantRegister {
 		}
 		
 		Enchantment.stopAcceptingRegistrations();
-		plugin.info("Enchants Registered: " + ENCHANT_LIST.size());
+		PLUGIN.info("Enchants Registered: " + ENCHANT_LIST.size());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void shutdown() {
-		try {
-		    Field keyField = Enchantment.class.getDeclaredField("byKey");
-		 
-		    keyField.setAccessible(true);
-		    @SuppressWarnings("unchecked")
-		    HashMap<NamespacedKey, Enchantment> byKey = (HashMap<NamespacedKey, Enchantment>) keyField.get(null);
-		    
-		    for (GoldenEnchant enchant : ENCHANT_LIST) {
-			    if (byKey.containsKey(enchant.getKey())) {
-			    	byKey.remove(enchant.getKey());
-			    }
-			    Field nameField = Enchantment.class.getDeclaredField("byName");
-			    
-			    nameField.setAccessible(true);
-			    @SuppressWarnings("unchecked")
-			    HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) nameField.get(null);
-			    if (byName.containsKey(enchant.getName())) {
-			        byName.remove(enchant.getName());
-			    }
-		    }
-		    ENCHANT_LIST.clear();
+	    Map<NamespacedKey, Enchantment> byKey = (Map<NamespacedKey, Enchantment>) Reflex.getFieldValue(Enchantment.class, "byKey");
+	    Map<String, Enchantment> byName = (Map<String, Enchantment>) Reflex.getFieldValue(Enchantment.class, "byName");
+	    
+	    if (byKey == null || byName == null) return;
+	    
+		for (GoldenEnchant enchant : ENCHANT_LIST) {
+			byKey.remove(enchant.getKey());
+			byName.remove(enchant.getName());
 		}
-		catch (Exception ignored) { }
+		ENCHANT_LIST.clear();
+		PLUGIN.info("All enchants are unregistered.");
 	}
 }
