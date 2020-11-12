@@ -23,6 +23,20 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 
 	private static final String LOOP_FIX = "EVENT_STOP";
 	private boolean disableOnSneak;
+
+	// X and Z offsets for each block AoE mined
+	private static final int[][] MINING_COORD_OFFSETS = new int[][]
+		{
+			{0, 0},
+			{0, -1},
+			{-1, 0},
+			{0, 1},
+			{1, 0},
+			{-1, -1},
+			{-1, 1},
+			{1, -1},
+			{1, 1},
+		};
 	
 	public EnchantTunnel(@NotNull GoldenEnchants plugin, @NotNull JYML cfg) {
 		super(plugin, cfg);
@@ -77,12 +91,22 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 		
 		boolean isY = dir != null && block.getRelative(dir.getOppositeFace()).isEmpty();
 		boolean isZ = dir == BlockFace.EAST || dir == BlockFace.WEST;
-		
-		for (int i = 0; i < 5; i++) {
+
+		// Mine + shape if Tunnel I, 3x3 if Tunnel II
+		int blocksBroken = 1;
+		if (lvl == 1) {
+			blocksBroken = 2;
+		} else if (lvl == 2) {
+			blocksBroken = 5;
+		} else if (lvl == 3) {
+			blocksBroken = 9;
+		}
+
+		for (int i = 0; i < blocksBroken; i++) {
 			if (ItemUT.isAir(tool)) break;
 			
-			int xAdd = i == 0 ? 1 : (i == 1 ? -1 : 0);
-			int zAdd = i == 2 ? 1 : (i == 3 ? -1 : 0);
+			int xAdd = MINING_COORD_OFFSETS[i][0];
+			int zAdd = MINING_COORD_OFFSETS[i][1];
 			
 			Block blockAdd;
 			if (isY) {
@@ -91,15 +115,18 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			else {
 				blockAdd = block.getLocation().clone().add(xAdd, 0, zAdd).getBlock();
 			}
-			
+
+			// Skip blocks that should not be mined
 			if (blockAdd.getType().isInteractable()) continue;
 			if (blockAdd.getDrops(tool).isEmpty()) continue;
 			if (blockAdd.isLiquid()) continue;
 			if (blockAdd.getType() == Material.BEDROCK) continue;
 			if (blockAdd.getType() == Material.END_PORTAL) continue;
 			if (blockAdd.getType() == Material.END_PORTAL_FRAME);
-			
+
+			// Add metadata to tool to prevent new block breaking event from triggering mining again
 			p.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, "event"));
+
 			BlockBreakEvent event = new BlockBreakEvent(blockAdd, p);
 			plugin.getPluginManager().callEvent(event);
 			if (event.isCancelled()) continue;
