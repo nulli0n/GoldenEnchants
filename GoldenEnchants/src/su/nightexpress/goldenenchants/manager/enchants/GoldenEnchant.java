@@ -81,8 +81,8 @@ public abstract class GoldenEnchant extends Enchantment {
 				Material.GOLDEN_BOOTS, Material.IRON_BOOTS, Material.LEATHER_BOOTS);
 		
 		if (Config.GEN_ENCHANTS_ELYTRA_TO_CHESTPLATE) {
-			ITEM_CHESTPLATES.add(Material.ELYTRA);
-		}
+    		ITEM_CHESTPLATES.add(Material.ELYTRA);
+    	}
 		
 		if (Version.CURRENT.isHigher(Version.V1_15_R1)) {
 			ITEM_SWORDS.add(Material.NETHERITE_SWORD);
@@ -103,7 +103,7 @@ public abstract class GoldenEnchant extends Enchantment {
 		this.id = this.getKey().getKey();
 		this.cfg = cfg;
 		
-		this.display = cfg.getString("name");
+		this.display = StringUT.color(cfg.getString("name", this.getId()));
 		this.tier = plugin.getEnchantManager().getTierById(cfg.getString("tier", "null"));
 		if (this.tier == null) {
 			throw new IllegalStateException("Invalid tier provided for '" + id + "' enchantment!");
