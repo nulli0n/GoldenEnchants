@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -58,8 +59,15 @@ public class EnchantThrifty extends IEnchantChanceTemplate implements DeathEncha
 		if (this.entityBlacklist.contains(dead.getType().name())) return;
 		if (!this.checkTriggerChance(lvl)) return;
 		
+		
+		
 		Material material = Material.getMaterial(dead.getType().name() + "_SPAWN_EGG");
-		if (material == null) return;
+		if (material == null) {
+			if (dead.getType() == EntityType.MUSHROOM_COW) {
+				material = Material.MOOSHROOM_SPAWN_EGG;
+			}
+			else return;
+		}
 		
 		ItemStack egg = new ItemStack(material);
 		e.getDrops().add(egg);
