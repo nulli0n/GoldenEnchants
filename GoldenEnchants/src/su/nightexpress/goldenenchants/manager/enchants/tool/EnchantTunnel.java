@@ -21,9 +21,9 @@ import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
 
 public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchant {
 
-	private static final String LOOP_FIX = "EVENT_STOP";
 	private boolean disableOnSneak;
 
+	private static final String LOOP_FIX = "EVENT_STOP";
 	// X and Z offsets for each block AoE mined
 	private static final int[][] MINING_COORD_OFFSETS = new int[][]
 		{
@@ -86,7 +86,9 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 		
 		BlockFace dir = LocUT.getDirection(p);
 		Block block = e.getBlock();
-		if (block.getType().isInteractable()) return;
+		
+		// Redstone ore seems to be 'interactable'.
+		if (block.getType().isInteractable() && block.getType() != Material.REDSTONE_ORE) return;
 		if (block.getDrops(tool).isEmpty()) return;
 		
 		boolean isY = dir != null && block.getRelative(dir.getOppositeFace()).isEmpty();
@@ -96,12 +98,15 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 		int blocksBroken = 1;
 		if (lvl == 1) {
 			blocksBroken = 2;
-		} else if (lvl == 2) {
+		} 
+		else if (lvl == 2) {
 			blocksBroken = 5;
-		} else if (lvl == 3) {
+		} 
+		else if (lvl == 3) {
 			blocksBroken = 9;
 		}
-
+		
+		int expDrop = e.getExpToDrop();
 		for (int i = 0; i < blocksBroken; i++) {
 			if (ItemUT.isAir(tool)) break;
 			
@@ -115,9 +120,9 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			else {
 				blockAdd = block.getLocation().clone().add(xAdd, 0, zAdd).getBlock();
 			}
-
+			
 			// Skip blocks that should not be mined
-			if (blockAdd.getType().isInteractable()) continue;
+			if (blockAdd.getType().isInteractable() && blockAdd.getType() != Material.REDSTONE_ORE) continue;
 			if (blockAdd.getDrops(tool).isEmpty()) continue;
 			if (blockAdd.isLiquid()) continue;
 			if (blockAdd.getType() == Material.BEDROCK) continue;
@@ -125,8 +130,8 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			if (blockAdd.getType() == Material.END_PORTAL_FRAME);
 
 			// Add metadata to tool to prevent new block breaking event from triggering mining again
-			p.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, "event"));
-
+			p.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, true));
+			
 			BlockBreakEvent event = new BlockBreakEvent(blockAdd, p);
 			plugin.getPluginManager().callEvent(event);
 			if (event.isCancelled()) continue;
@@ -134,14 +139,10 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			if (!blockAdd.breakNaturally(tool)) continue;
 			
 			p.getInventory().setItemInMainHand(tool = plugin.getNMS().damageItem(tool, 1, p));
-			/*if (dmg != null) {
-				PlayerItemDamageEvent event2 = new PlayerItemDamageEvent(p, tool, 1);
-				plugin.getPluginManager().callEvent(event2);
-				if (event2.isCancelled()) continue;
-				
-				dmg.setDamage(dmg.getDamage() + 1);
-				tool.setItemMeta(meta);
-			}*/
+			
+			// Add Exp from mined blocks.
+			expDrop += event.getExpToDrop();
 		}
+		e.setExpToDrop(expDrop);
 	}
 }
