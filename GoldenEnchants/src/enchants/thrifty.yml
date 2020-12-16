@@ -6,8 +6,16 @@ level:
 enchantment-table:
   min-player-level: 30
   chance: 25.0
+anvil:
+  merge-cost: '%level%'
+villagers:
+  chance: 25.0
+loot-generation:
+  chance: 25.0
 settings:
   enchant-trigger-chance: '1.5 * %level%'
   entity-blacklist:
   - 'WITHER'
   - 'ENDER_DRAGON'
+  spawn-reason-blacklist:
+  - 'SPAWNER'

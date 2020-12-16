@@ -122,12 +122,14 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			}
 			
 			// Skip blocks that should not be mined
-			if (blockAdd.getType().isInteractable() && blockAdd.getType() != Material.REDSTONE_ORE) continue;
 			if (blockAdd.getDrops(tool).isEmpty()) continue;
 			if (blockAdd.isLiquid()) continue;
-			if (blockAdd.getType() == Material.BEDROCK) continue;
-			if (blockAdd.getType() == Material.END_PORTAL) continue;
-			if (blockAdd.getType() == Material.END_PORTAL_FRAME);
+			
+			Material addType = blockAdd.getType();
+			if (addType.isInteractable() && addType != Material.REDSTONE_ORE) continue;
+			if (addType == Material.BEDROCK || addType == Material.END_PORTAL
+					|| addType == Material.END_PORTAL_FRAME) continue;
+			if (addType == Material.OBSIDIAN && addType != block.getType()) continue;
 
 			// Add metadata to tool to prevent new block breaking event from triggering mining again
 			p.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, true));

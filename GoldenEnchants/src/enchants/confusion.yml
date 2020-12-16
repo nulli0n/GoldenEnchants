@@ -6,6 +6,12 @@ level:
 enchantment-table:
   min-player-level: 15
   chance: 30.0
+anvil:
+  merge-cost: '%level%'
+villagers:
+  chance: 30.0
+loot-generation:
+  chance: 30.0
 settings:
   particle-effect: 'ITEM_CRACK:ROTTEN_FLESH'
   enchant-trigger-chance: '60.0'

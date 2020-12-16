@@ -15,6 +15,7 @@ import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
 import su.nightexpress.goldenenchants.manager.EnchantRegister;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
+import su.nightexpress.goldenenchants.manager.enchants.api.type.ObtainType;
 
 public class ListCommand extends ISubCommand<GoldenEnchants> {
 
@@ -41,11 +42,11 @@ public class ListCommand extends ISubCommand<GoldenEnchants> {
 	
 	@Override
 	@NotNull
-	public List<String> getTab(@NotNull Player p, int i, @NotNull String[] args) {
+	public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
 		if (i == 1) {
 			return Arrays.asList("[page]");
 		}
-		return super.getTab(p, i, args);
+		return super.getTab(player, i, args);
 	}
 	
 	@Override
@@ -69,7 +70,7 @@ public class ListCommand extends ISubCommand<GoldenEnchants> {
     						.hint(plugin.lang().Command_List_Enchant_Hint
     								.replace("%max-level%", String.valueOf(ge.getMaxLevel()))
     								.replace("%min-level%", String.valueOf(ge.getStartLevel()))
-    								.replace("%chance%", String.valueOf(ge.getEnchantmentChance()))
+    								.replace("%chance%", String.valueOf(ge.getObtainChance(ObtainType.ENCHANTING)))
     								.replace("%tier%", ge.getTier().getName())
     								.getMsg());
     				

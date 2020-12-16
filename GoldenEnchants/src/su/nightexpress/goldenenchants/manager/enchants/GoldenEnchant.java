@@ -1,5 +1,6 @@
 package su.nightexpress.goldenenchants.manager.enchants;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -17,14 +18,17 @@ import com.google.common.collect.Sets;
 
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.core.Version;
+import su.nexmedia.engine.manager.AbstractListener;
 import su.nexmedia.engine.utils.NumberUT;
 import su.nexmedia.engine.utils.StringUT;
+import su.nexmedia.engine.utils.constants.JStrings;
 import su.nexmedia.engine.utils.eval.Evaluator;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
-import su.nightexpress.goldenenchants.manager.EnchantTier;
+import su.nightexpress.goldenenchants.manager.EnchantManager;
+import su.nightexpress.goldenenchants.manager.enchants.api.type.ObtainType;
 
-public abstract class GoldenEnchant extends Enchantment {
+public abstract class GoldenEnchant extends Enchantment implements AbstractListener {
 
 	protected final GoldenEnchants plugin;
 	protected final JYML cfg;
@@ -35,7 +39,8 @@ public abstract class GoldenEnchant extends Enchantment {
 	protected int minLvl;
 	protected int maxLvl;
 	protected int tablePlayerLvl;
-	protected double tableEnchantChance;
+	protected Map<ObtainType, Double> obtainChance;
+	protected TreeMap<Integer, Double> anvilMergeCost;
 	
 	protected static final Set<Material> ITEM_SWORDS;
 	protected static final Set<Material> ITEM_AXES;
@@ -103,16 +108,38 @@ public abstract class GoldenEnchant extends Enchantment {
 		this.id = this.getKey().getKey();
 		this.cfg = cfg;
 		
-		this.display = StringUT.color(cfg.getString("name", this.getId()));
-		this.tier = plugin.getEnchantManager().getTierById(cfg.getString("tier", "null"));
-		if (this.tier == null) {
-			throw new IllegalStateException("Invalid tier provided for '" + id + "' enchantment!");
-		}
+		this.cfg.addMissing("anvil.merge-cost", "%level%");
 		
+		this.display = StringUT.color(cfg.getString("name", this.getId()));
+		this.tier = EnchantManager.getTierById(cfg.getString("tier", JStrings.DEFAULT));
+		if (this.tier == null) {
+			throw new IllegalStateException("Invalid tier provided for the '" + id + "' enchantment!");
+		}
+		this.tier.getEnchants().add(this);
 		this.minLvl = cfg.getInt("level.min");
 		this.maxLvl = cfg.getInt("level.max");
 		this.tablePlayerLvl = cfg.getInt("enchantment-table.min-player-level");
-		this.tableEnchantChance = cfg.getDouble("enchantment-table.chance");
+		this.anvilMergeCost = new TreeMap<>();
+		this.loadMapValues(this.anvilMergeCost, "anvil.merge-cost");
+		
+		double tableChance = cfg.getDouble("enchantment-table.chance");
+		
+		// Update config
+		this.cfg.addMissing("villagers.chance", tableChance);
+		this.cfg.addMissing("loot-generation.chance", tableChance);
+		this.cfg.saveChanges();
+		
+		double villagerChance = this.cfg.getDouble("villagers.chance");
+		double lootGenChance = this.cfg.getDouble("loot-generation.chance");
+		this.obtainChance = new HashMap<>();
+		this.obtainChance.put(ObtainType.ENCHANTING, tableChance);
+		this.obtainChance.put(ObtainType.VILLAGER, villagerChance);
+		this.obtainChance.put(ObtainType.LOOT_GENERATION, lootGenChance);
+	}
+	
+	@Override
+	public final void registerListeners() {
+		this.plugin.getPluginManager().registerEvents(this, this.plugin);
 	}
 	
 	@NotNull
@@ -153,8 +180,6 @@ public abstract class GoldenEnchant extends Enchantment {
 			
 			map.put(lvl, Evaluator.eval(exChance, 1));
 		}
-		//System.out.println(getId() + " total map: " + map);
-		//System.out.println("------------------------");
 	}
 	
 	protected final boolean isSword(@NotNull ItemStack item) {
@@ -221,8 +246,12 @@ public abstract class GoldenEnchant extends Enchantment {
 		return this.tablePlayerLvl;
 	}
 	
-	public final double getEnchantmentChance() {
-		return this.tableEnchantChance;
+	public final double getObtainChance(@NotNull ObtainType obtainType) {
+		return this.obtainChance.getOrDefault(obtainType, 0D);
+	}
+	
+	public final int getAnvilMergeCost(int level) {
+		return (int) this.getMapValue(this.anvilMergeCost, level, level);
 	}
 	
 	public final void addPotionEffect(

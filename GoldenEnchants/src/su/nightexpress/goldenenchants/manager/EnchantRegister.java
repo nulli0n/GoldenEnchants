@@ -55,6 +55,7 @@ import su.nightexpress.goldenenchants.manager.enchants.combat.bows.EnchantWither
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantBlastMining;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantDivineTouch;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantLuckyMiner;
+import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantReplanter;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantSmelter;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantTelekinesis;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantTreasures;
@@ -69,6 +70,7 @@ public class EnchantRegister {
 	public static final EnchantDivineTouch 		DIVINE_TOUCH;
 	public static final EnchantHaste			HASTE;
 	public static final EnchantLuckyMiner		LUCKY_MINER;
+	public static final EnchantReplanter		REPLANTER;
 	public static final EnchantSmelter 			SMELTER;
 	public static final EnchantTelekinesis		TELEKINESIS;
 	public static final EnchantTreasures 		TREASURES;
@@ -139,6 +141,7 @@ public class EnchantRegister {
 		DIVINE_TOUCH = init(EnchantDivineTouch.class, "divine_touch");
 		HASTE = init(EnchantHaste.class, "haste");
 		LUCKY_MINER = init(EnchantLuckyMiner.class, "lucky_miner");
+		REPLANTER = init(EnchantReplanter.class, "replanter");
 		SMELTER = init(EnchantSmelter.class, "smelter");
 		TELEKINESIS = init(EnchantTelekinesis.class, "telekinesis");
 		TREASURES = init(EnchantTreasures.class, "treasures");
@@ -208,7 +211,7 @@ public class EnchantRegister {
 		
 		Enchantment.registerEnchantment(enchant);
 		ENCHANT_LIST.add(enchant);
-		
+		enchant.registerListeners();
 		//IRegistry.a(IRegistry.ENCHANTMENT, enchant.getId(), CraftEnchantment.getRaw(enchant));
 	}
 
@@ -243,6 +246,7 @@ public class EnchantRegister {
 		for (GoldenEnchant enchant : ENCHANT_LIST) {
 			byKey.remove(enchant.getKey());
 			byName.remove(enchant.getName());
+			enchant.unregisterListeners();
 		}
 		ENCHANT_LIST.clear();
 		PLUGIN.info("All enchants are unregistered.");

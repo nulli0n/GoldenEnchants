@@ -6,6 +6,12 @@ level:
 enchantment-table:
   min-player-level: 15
   chance: 10.0
+anvil:
+  merge-cost: '%level%'
+villagers:
+  chance: 10.0
+loot-generation:
+  chance: 10.0
 settings:
   particle-effect: 'CRIT_MAGIC'
   enchant-trigger-chance: '5.0'

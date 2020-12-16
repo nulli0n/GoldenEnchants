@@ -5,10 +5,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.jetbrains.annotations.NotNull;
 
 import su.nexmedia.engine.commands.api.ISubCommand;
@@ -17,7 +15,10 @@ import su.nexmedia.engine.utils.PlayerUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
-import su.nightexpress.goldenenchants.manager.EnchantTier;
+import su.nightexpress.goldenenchants.manager.EnchantManager;
+import su.nightexpress.goldenenchants.manager.enchants.EnchantTier;
+import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
+import su.nightexpress.goldenenchants.manager.enchants.api.type.ObtainType;
 
 public class TierbookCommand extends ISubCommand<GoldenEnchants> {
 
@@ -44,17 +45,17 @@ public class TierbookCommand extends ISubCommand<GoldenEnchants> {
 
 	@Override
 	@NotNull
-	public List<String> getTab(@NotNull Player p, int i, @NotNull String[] args) {
+	public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
 		if (i == 1) {
 			return PlayerUT.getPlayerNames();
 		}
 		if (i == 2) {
-			return plugin.getEnchantManager().getTierIds();
+			return EnchantManager.getTierIds();
 		}
 		if (i == 3) {
 			return Arrays.asList("-1", "1", "5", "10");
 		}
-		return super.getTab(p, i, args);
+		return super.getTab(player, i, args);
 	}
 	
 	@Override
@@ -72,31 +73,25 @@ public class TierbookCommand extends ISubCommand<GoldenEnchants> {
 		}
 		
 		String en = args[2].toLowerCase();
-		EnchantTier tier = plugin.getEnchantManager().getTierById(en);
+		EnchantTier tier = EnchantManager.getTierById(en);
 		if (tier == null) {
 			plugin.lang().Command_TierBook_Error.send(sender, true);
 			return;
 		}
 		
-		Enchantment e = plugin.getEnchantManager().getEnchantByTier(tier);
-		if (e == null) {
+		GoldenEnchant ench = tier.getEnchant(ObtainType.ENCHANTING);
+		if (ench == null) {
 			plugin.lang().Error_NoEnchant.send(sender, true);
 			return;
 		}
 		
 		int lvl = this.getNumI(sender, args[3], -1, true);
 		if (lvl < 1) {
-			lvl = Rnd.get(e.getStartLevel(), e.getMaxLevel());
+			lvl = Rnd.get(ench.getStartLevel(), ench.getMaxLevel());
 		}
 		
 		ItemStack item = new ItemStack(Material.ENCHANTED_BOOK);
-	    EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
-	    if (meta == null) return;
-	    
-	    meta.addStoredEnchant(e, lvl, true);
-	    item.setItemMeta(meta);
-	        
-		plugin.getEnchantManager().updateItemLoreEnchants(item);
+		EnchantManager.addEnchant(item, ench, lvl, true);
 		ItemUT.addItem(p, item);
 		
 		plugin.lang().Command_TierBook_Done

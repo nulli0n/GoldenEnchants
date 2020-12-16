@@ -22,12 +22,30 @@ general:
   enchantment-table:
     max-golden-enchants: 2
     golden-enchant-chance: 60.0
-
+  villagers:
+    enabled: true
+    enchantments:
+      total-maximum: 3
+      golden-acquire-chance: 25.0
+      golden-minimum: 0
+      golden-maximum: 2
+  loot-generation:
+    enabled: true
+    enchantments:
+      total-maximum: 3
+      golden-populate-chance: 25.0
+      golden-minimum: 0
+      golden-maximum: 2
+  
 tiers:
+  default:
+    name: '&7Default'
+    color: '&7'
+    chance: 80.0
   common:
     name: '&fCommon'
     color: '&f'
-    chance: 75.0
+    chance: 60.0
   rare:
     name: '&aRare'
     color: '&a'

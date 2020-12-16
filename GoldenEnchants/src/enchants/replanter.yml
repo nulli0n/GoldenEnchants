@@ -1,18 +1,19 @@
-name: 'Aquaman'
-tier: 'rare'
+name: 'Replanter'
+tier: 'common'
 level:
   min: 1
   max: 1
 enchantment-table:
   min-player-level: 15
-  chance: 40.0
+  chance: 20.0
 anvil:
   merge-cost: '%level%'
 villagers:
-  chance: 40.0
+  chance: 20.0
 loot-generation:
-  chance: 40.0
+  chance: 20.0
 settings:
   enchant-trigger-chance: '100.0'
-  effect-level: '1'
-  effect-duration: '15.0'
+  replant:
+    on-right-click: true
+    on-plant-break: true

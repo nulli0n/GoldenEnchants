@@ -18,6 +18,7 @@ import su.nexmedia.engine.utils.ItemUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
+import su.nightexpress.goldenenchants.manager.EnchantManager;
 
 public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 
@@ -44,7 +45,7 @@ public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 
 	@Override
 	@NotNull
-	public List<String> getTab(@NotNull Player p, int i, @NotNull String[] args) {
+	public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
 		if (i == 1) {
 	        List<String> list = new ArrayList<String>();
 	        for (Enchantment e : Enchantment.values()) {
@@ -55,7 +56,7 @@ public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 		if (i == 2) {
 			return Arrays.asList("-1", "1", "5", "10");
 		}
-		return super.getTab(p, i, args);
+		return super.getTab(player, i, args);
 	}
 	
 	@Override
@@ -94,7 +95,7 @@ public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 			meta.addEnchant(e, lvl, true);
 		}
 		item.setItemMeta(meta);
-		plugin.getEnchantManager().updateItemLoreEnchants(item);
+		EnchantManager.updateItemLoreEnchants(item);
 		
 		plugin.lang().Command_Enchant_Done.send(sender, true);
 	}

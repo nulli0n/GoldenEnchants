@@ -5,7 +5,13 @@ level:
   max: 3
 enchantment-table:
   min-player-level: 12
-  chance: 55.0
+  chance: 45.0
+anvil:
+  merge-cost: '%level%'
+villagers:
+  chance: 45.0
+loot-generation:
+  chance: 45.0
 settings:
   particle-effect: 'BLOCK_CRACK:ICE'
   enchant-trigger-chance: '25.0 * %level%'

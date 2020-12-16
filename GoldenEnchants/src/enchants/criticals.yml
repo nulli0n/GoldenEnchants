@@ -6,6 +6,12 @@ level:
 enchantment-table:
   min-player-level: 30
   chance: 15.0
+anvil:
+  merge-cost: '%level%'
+villagers:
+  chance: 15.0
+loot-generation:
+  chance: 15.0
 settings:
   enchant-trigger-chance: '30.0 * %level%'
   damage-modifier:

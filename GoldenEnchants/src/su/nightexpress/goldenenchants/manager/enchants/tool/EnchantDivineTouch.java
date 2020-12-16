@@ -9,7 +9,10 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.ItemUT;
 import su.nexmedia.engine.utils.LocUT;
 import su.nexmedia.engine.utils.StringUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
@@ -89,5 +93,32 @@ public class EnchantDivineTouch extends IEnchantChanceTemplate implements BlockE
 		
 		world.dropItemNaturally(l, spawner);
 		EffectUT.playEffect(l, "VILLAGER_HAPPY", 0.3f, 0.3f, 0.3f, 0.15f, 30);
+	}
+	
+	// ---------------------------------------------------------------
+	// Spawner Type Fix
+	// ---------------------------------------------------------------
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onSpawnerPlace(BlockPlaceEvent e) {
+		Block block = e.getBlock();
+		if (block.getType() != Material.SPAWNER) return;
+		
+		Player player = e.getPlayer();
+		ItemStack spawner = player.getInventory().getItemInMainHand();
+		if (ItemUT.isAir(spawner) || spawner.getType() != Material.SPAWNER) {
+			spawner = player.getInventory().getItemInOffHand();
+		}
+		if (ItemUT.isAir(spawner) || spawner.getType() != Material.SPAWNER) {
+			return;
+		}
+		
+		BlockStateMeta meta = (BlockStateMeta) spawner.getItemMeta();
+		if (meta == null) return;
+		
+		CreatureSpawner spawnerItem = (CreatureSpawner) meta.getBlockState();
+	    CreatureSpawner spawnerBlock = (CreatureSpawner) block.getState();
+	    
+	    spawnerBlock.setSpawnedType(spawnerItem.getSpawnedType());
+	    spawnerBlock.update();
 	}
 }

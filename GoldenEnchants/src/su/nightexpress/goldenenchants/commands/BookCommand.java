@@ -19,6 +19,7 @@ import su.nexmedia.engine.utils.PlayerUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.Perms;
+import su.nightexpress.goldenenchants.manager.EnchantManager;
 
 public class BookCommand extends ISubCommand<GoldenEnchants> {
 	
@@ -45,7 +46,7 @@ public class BookCommand extends ISubCommand<GoldenEnchants> {
 
 	@Override
 	@NotNull
-	public List<String> getTab(@NotNull Player p, int i, @NotNull String[] args) {
+	public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
 		if (i == 1) {
 			return PlayerUT.getPlayerNames();
 		}
@@ -59,11 +60,11 @@ public class BookCommand extends ISubCommand<GoldenEnchants> {
 		if (i == 3) {
 			return Arrays.asList("-1", "1", "5", "10");
 		}
-		return super.getTab(p, i, args);
+		return super.getTab(player, i, args);
 	}
 	
 	@Override
-	public void perform(CommandSender sender, String label, String[] args) {
+	public void perform(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
 		if (args.length != 4) {
 			this.printUsage(sender);
 			return;
@@ -94,8 +95,8 @@ public class BookCommand extends ISubCommand<GoldenEnchants> {
 	    
 	    meta.addStoredEnchant(e, lvl, true);
 	    item.setItemMeta(meta);
-	        
-		plugin.getEnchantManager().updateItemLoreEnchants(item);
+	    
+		EnchantManager.updateItemLoreEnchants(item);
 		ItemUT.addItem(p, item);
 		
 		plugin.lang().Command_Book_Done

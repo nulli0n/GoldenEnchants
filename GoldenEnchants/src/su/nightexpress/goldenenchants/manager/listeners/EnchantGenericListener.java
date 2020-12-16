@@ -2,21 +2,19 @@ package su.nightexpress.goldenenchants.manager.listeners;
 
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -27,22 +25,22 @@ import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.manager.EnchantManager;
-import su.nightexpress.goldenenchants.manager.EnchantRegister;
-import su.nightexpress.goldenenchants.manager.EnchantTier;
+import su.nightexpress.goldenenchants.manager.enchants.EnchantTier;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
+import su.nightexpress.goldenenchants.manager.enchants.api.type.ObtainType;
 
 public class EnchantGenericListener extends IListener<GoldenEnchants> {
-
-	private static final BlockFace[] FACES = new BlockFace[] {
-			BlockFace.SOUTH, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST};
 	
-	private EnchantManager enchantManager;
+	//private EnchantManager enchantManager;
 	
 	public EnchantGenericListener(@NotNull EnchantManager enchantManager) {
 		super(enchantManager.plugin);
-		this.enchantManager = enchantManager;
+		//this.enchantManager = enchantManager;
 	}
 
+	// ---------------------------------------------------------------
+	// Handle Anvil
+	// ---------------------------------------------------------------
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEnchantAnvil(PrepareAnvilEvent e) {
 		AnvilInventory inv = e.getInventory();
@@ -59,33 +57,37 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 			result = new ItemStack(source);
 		}
 		
-		Map<GoldenEnchant, Integer> enchAdd = this.enchantManager.getItemGoldenEnchants(source);
+		Map<GoldenEnchant, Integer> enchAdd = EnchantManager.getItemGoldenEnchants(source);
 		int cost = inv.getRepairCost();
 		
 		if (book != null && (book.getType() == Material.ENCHANTED_BOOK || book.getType() == source.getType())) {
-			for (Map.Entry<GoldenEnchant, Integer> en : this.enchantManager.getItemGoldenEnchants(book).entrySet()) {
+			for (Map.Entry<GoldenEnchant, Integer> en : EnchantManager.getItemGoldenEnchants(book).entrySet()) {
 				enchAdd.merge(en.getKey(), en.getValue(), (oldLvl, newLvl) -> (oldLvl == newLvl) ? (oldLvl + 1) : (Math.max(oldLvl, newLvl)));
 			}
 		}
 		
 		for (Map.Entry<GoldenEnchant, Integer> ent : enchAdd.entrySet()) {
-			int lvl = Math.min(ent.getKey().getMaxLevel(), ent.getValue());
-			if (this.enchantManager.addEnchant(result, ent.getKey(), lvl)) {
-				cost += lvl;
+			GoldenEnchant enchant = ent.getKey();
+			int lvl = Math.min(enchant.getMaxLevel(), ent.getValue());
+			if (EnchantManager.addEnchant(result, enchant, lvl, false)) {
+				cost += enchant.getAnvilMergeCost(lvl);
 			}
 		}
 		
 		if (!source.equals(result)) {
-			this.enchantManager.updateItemLoreEnchants(result);
+			EnchantManager.updateItemLoreEnchants(result);
 			e.setResult(result);
 			
-			// Fix for enchant books with invalid enchantments.
-			// NMS will set level cost to 0 AFTER calling the event.
+			// NMS ContainerAnvil will set level cost to 0 right after calling the event
+			// So we have to change it with a 1 tick delay.
 			final int cost2 = cost;
 			this.plugin.getServer().getScheduler().runTask(plugin, () -> inv.setRepairCost(cost2));
 		}
 	}
 	
+	// ---------------------------------------------------------------
+	// Update enchantment lore after grindstone
+	// ---------------------------------------------------------------
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onEnchantGrindStone(InventoryClickEvent e) {
 		Player p = (Player) e.getWhoClicked();
@@ -96,10 +98,13 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 			ItemStack result = top.getItem(2);
 			if (result == null || ItemUT.isAir(result)) return;
 			
-			this.enchantManager.updateItemLoreEnchants(result);
+			EnchantManager.updateItemLoreEnchants(result);
 		});
 	}
 	
+	// ---------------------------------------------------------------
+	// Handle Enchanting Table
+	// ---------------------------------------------------------------
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEnchantEnchantmentTable(final EnchantItemEvent e) {
 		final ItemStack target = e.getItem();
@@ -109,15 +114,15 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 		for (int count = 0; count < roll; count++) {
 			if (Rnd.get(true) > Config.GEN_TABLE_ENCHANT_CHANCE) continue;
 			
-			EnchantTier tier = this.enchantManager.getTierByChance();
+			EnchantTier tier = EnchantManager.getTierByChance(ObtainType.ENCHANTING);
 			if (tier == null) continue;
 			
-			GoldenEnchant enchant = this.enchantManager.getEnchantByTier(tier.getId(), e.getExpLevelCost());
+			GoldenEnchant enchant = tier.getEnchant(e.getExpLevelCost());
 			if (enchant == null) continue;
 			if (e.getEnchantsToAdd().keySet().stream().anyMatch(add -> add.conflictsWith(enchant) || enchant.conflictsWith(add))) continue;
 			
 			int lvl = Rnd.get(enchant.getStartLevel(), enchant.getMaxLevel());
-			if (!this.enchantManager.canEnchant(target, enchant, lvl)) continue;
+			if (!EnchantManager.canEnchant(target, enchant, lvl)) continue;
 			
 			e.getEnchantsToAdd().put(enchant, lvl);
 			enchantAdded = true;
@@ -142,46 +147,32 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 					result.setItemMeta(meta2);
 				}
 				
-				this.enchantManager.updateItemLoreEnchants(result);
+				EnchantManager.updateItemLoreEnchants(result);
 				e.getInventory().setItem(0, result);
 			});
 		}
 	}
 	
 	// ---------------------------------------------------------------
-	// Movement Enchants
+	// Adding Golden Enchants to Villagers
 	// ---------------------------------------------------------------
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-	public void onEnchantFlameWalker(PlayerMoveEvent e) {
-		Player player = e.getPlayer();
-		if (player.isFlying()) return;
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onEnchantVillagerAcquire(VillagerAcquireTradeEvent e) {
+		if (!Config.VILLAGERS_ENABLED) return;
 		
-		Location from = e.getFrom();
-		Location to = e.getTo();
-		if (to == null) return;
-		if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
-			return;
-		}
+		MerchantRecipe recipe = e.getRecipe();
+		ItemStack result = recipe.getResult();
 		
-		Block bTo = to.getBlock().getRelative(BlockFace.DOWN);
-		boolean hasLava = false;
-		for (BlockFace face : FACES) {
-			if (bTo.getRelative(face).getType() == Material.LAVA) {
-				hasLava = true;
-				break;
-			}
-		}
-		if (!hasLava) return;
-	
-		ItemStack boots = player.getInventory().getBoots();
-		if (boots == null || ItemUT.isAir(boots)) return;
+		if (!EnchantManager.isEnchantable(result)) return;
+		EnchantManager.populateEnchantments(result, ObtainType.VILLAGER);
 		
-		ItemMeta meta = boots.getItemMeta();
-		if (meta == null) return;
+		int uses = recipe.getUses();
+		int maxUses = recipe.getMaxUses();
+		boolean expReward = recipe.hasExperienceReward();
+		int villagerExperience = recipe.getVillagerExperience();
+		float priceMultiplier = recipe.getPriceMultiplier();
 		
-		int level = meta.getEnchants().getOrDefault(EnchantRegister.FLAME_WALKER, 0);
-		if (level < 1) return;
-		
-		EnchantRegister.FLAME_WALKER.use(e, player, level);
+		MerchantRecipe recipe2 = new MerchantRecipe(result, uses, maxUses, expReward, villagerExperience, priceMultiplier);
+		e.setRecipe(recipe2);
 	}
 }

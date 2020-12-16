@@ -1,11 +1,14 @@
 package su.nightexpress.goldenenchants.manager;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
@@ -15,27 +18,24 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.manager.IListener;
 import su.nexmedia.engine.manager.IManager;
 import su.nexmedia.engine.utils.ItemUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
+import su.nightexpress.goldenenchants.manager.enchants.EnchantTier;
 import su.nightexpress.goldenenchants.manager.enchants.GoldenEnchant;
-import su.nightexpress.goldenenchants.manager.listeners.EnchantCombatListener;
+import su.nightexpress.goldenenchants.manager.enchants.api.type.ObtainType;
 import su.nightexpress.goldenenchants.manager.listeners.EnchantGenericListener;
-import su.nightexpress.goldenenchants.manager.listeners.EnchantToolListener;
+import su.nightexpress.goldenenchants.manager.listeners.EnchantHandlerListener;
 import su.nightexpress.goldenenchants.manager.tasks.ArrowTrailsTask;
 import su.nightexpress.goldenenchants.manager.tasks.PassiveEnchantsTask;
 
 public class EnchantManager extends IManager<GoldenEnchants> {
-
-	private Map<String, EnchantTier> tiers;
-	private Map<String, List<GoldenEnchant>> tierEnchants;
 	
-	private EnchantCombatListener combatListener;
-	private EnchantToolListener toolListener;
-	private EnchantGenericListener genericListener;
+	private Set<IListener<GoldenEnchants>> listeners;
+	public EnchantPopulator populator;
 	
 	private ArrowTrailsTask arrowTrailsTask;
 	private PassiveEnchantsTask passiveEnchantsTask;
@@ -48,20 +48,17 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 	
 	@Override
 	public void setup() {
-		this.setupTiers();
 		EnchantRegister.setup();
-		this.sortTierEnchants();
 		
-		this.combatListener = new EnchantCombatListener(this);
-		this.combatListener.registerListeners();
+		this.listeners = new HashSet<>();
+		this.listeners.add(new EnchantHandlerListener(this));
+		this.listeners.add(new EnchantGenericListener(this));
+		this.listeners.forEach(listener -> listener.registerListeners());
 		
-		this.toolListener = new EnchantToolListener(this);
-		this.toolListener.registerListeners();
-		
-		this.genericListener = new EnchantGenericListener(this);
-		this.genericListener.registerListeners();
-		
-		//this.registerListeners();
+		if (Config.LOOTGEN_ENABLED) {
+			this.populator = new EnchantPopulator();
+			this.plugin.getServer().getWorlds().forEach(world -> world.getPopulators().add(populator));
+		}
 		
 		this.arrowTrailsTask = new ArrowTrailsTask(this.plugin);
 		this.arrowTrailsTask.start();
@@ -80,69 +77,54 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 			this.passiveEnchantsTask.stop();
 			this.passiveEnchantsTask = null;
 		}
-
-		if (this.combatListener != null) {
-			this.combatListener.unregisterListeners();
-			this.combatListener = null;
+		if (this.listeners != null) {
+			this.listeners.forEach(listener -> listener.unregisterListeners());
+			this.listeners.clear();
+			this.listeners = null;
 		}
-		if (this.toolListener != null) {
-			this.toolListener.unregisterListeners();
-			this.toolListener = null;
-		}
-		if (this.genericListener != null) {
-			this.genericListener.unregisterListeners();
-			this.genericListener = null;
+		if (this.populator != null) {
+			this.plugin.getServer().getWorlds().forEach(world -> world.getPopulators().remove(this.populator));
+			this.populator = null;
 		}
 		
-		if (this.tierEnchants != null) {
-			this.tierEnchants.clear();
-			this.tierEnchants = null;
-		}
-		if (this.tiers != null) {
-			this.tiers.clear();
-			this.tiers = null;
-		}
-		
-		//this.unregisterListeners();
 		EnchantRegister.shutdown();
 	}
 	
-	private void setupTiers() {
-		this.tiers = new HashMap<>();
+	public static boolean isEnchantable(@NotNull ItemStack item) {
+		return item.getType() == Material.ENCHANTED_BOOK 
+				|| ItemUT.isWeapon(item) || ItemUT.isArmor(item);
+	}
+	
+	public static void populateEnchantments(@NotNull ItemStack item, @NotNull ObtainType obtainType) {
+		int enchHas = EnchantManager.getItemEnchantsAmount(item);
+		int enchMax = Config.getPopulationEnchantsTotalMax(obtainType);
+		int enchRoll = Rnd.get(Config.getPopulationEnchantsGoldenMin(obtainType), Config.getPopulationEnchantsGoldenMax(obtainType));
 		
-		JYML cfg = this.plugin.cfg().getJYML();
-		for (String sId : cfg.getSection("tiers")) {
-			String path = "tiers." + sId + ".";
-			String name = cfg.getString(path + "name", sId);
-			String color = cfg.getString(path + "color", "&f");
-			double chance = cfg.getDouble(path + "chance");
+		for (int count = 0; (count < enchRoll && count + enchHas < enchMax); count++) {
+			EnchantTier tier = EnchantManager.getTierByChance(obtainType);
+			if (tier == null) continue;
 			
-			EnchantTier tier = new EnchantTier(sId, name, color, chance);
-			this.tiers.put(tier.getId(), tier);
+			GoldenEnchant enchant = tier.getEnchant(obtainType);
+			if (enchant == null) continue;
+			
+			int lvl = Rnd.get(enchant.getStartLevel(), enchant.getMaxLevel());
+			if (!EnchantManager.canEnchant(item, enchant, lvl)) continue;
+			
+			EnchantManager.addEnchant(item, enchant, lvl, false);
 		}
-		
-		this.plugin.info("Tiers Loaded: " + this.tiers.size());
+		EnchantManager.updateItemLoreEnchants(item);
 	}
-	
-	private void sortTierEnchants() {
-		this.tierEnchants = new HashMap<>();
-		EnchantRegister.ENCHANT_LIST.forEach(en -> {
-			EnchantTier tier = en.getTier();
-			String id = tier.getId();
-			this.tierEnchants.computeIfAbsent(id, list2 -> new ArrayList<>()).add(en);
-		});
-	}
-	
-	public static boolean hasEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en) {
+
+	public static boolean hasEnchant(@NotNull ItemStack item, @NotNull Enchantment en) {
 		return EnchantManager.getEnchantLevel(item, en) != 0;
 	}
 	
-	public static int getEnchantLevel(@NotNull ItemStack item, @NotNull GoldenEnchant en) {
+	public static int getEnchantLevel(@NotNull ItemStack item, @NotNull Enchantment en) {
 		ItemMeta meta = item.getItemMeta();
 		return meta != null ? meta.getEnchantLevel(en) : 0;
 	}
 	
-	public void updateItemLoreEnchants(@NotNull ItemStack item) {
+	public static void updateItemLoreEnchants(@NotNull ItemStack item) {
 		ItemMeta meta = item.getItemMeta();
 		if (meta == null) return;
 		
@@ -159,18 +141,18 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 			ItemUT.delLore(item, ench.getId());
 		});
 		
-		for (Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-			if (!(e.getKey() instanceof GoldenEnchant)) continue;
+		enchants.forEach((en, level) -> {
+			if (!(en instanceof GoldenEnchant)) return;
 			
-			GoldenEnchant ge = (GoldenEnchant) e.getKey();
-			ItemUT.addLore(item, ge.getId(), ge.getFormatted(e.getValue()), 0);
-		}
+			GoldenEnchant ge = (GoldenEnchant) en;
+			ItemUT.addLore(item, ge.getId(), ge.getFormatted(level), 0);
+		});
 	}
 	
-	public boolean canEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en, int lvl) {
+	public static boolean canEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en, int lvl) {
 		if (lvl < 1) return false;
 		if (!en.canEnchantItem(item)) return false;
-		if (this.getItemGoldenEnchantsAmount(item) >= Config.GEN_ENCHANTS_MAX_FOR_ITEM) return false;
+		if (getItemGoldenEnchantsAmount(item) >= Config.GEN_ENCHANTS_MAX_FOR_ITEM) return false;
 		
 		if (lvl < en.getStartLevel()) lvl = en.getStartLevel();
 		if (lvl > en.getMaxLevel()) lvl = en.getMaxLevel();
@@ -190,10 +172,10 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		return true;
 	}
 	
-	public boolean addEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en, int lvl) {
-		if (!this.canEnchant(item, en, lvl)) return false;
-		this.removeEnchant(item, en);
+	public static boolean addEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en, int lvl, boolean force) {
+		if (!force && !canEnchant(item, en, lvl)) return false;
 		
+		EnchantManager.removeEnchant(item, en);
 		ItemUT.addLore(item, en.getId(), en.getFormatted(lvl), 0);
 		
 		ItemMeta meta = item.getItemMeta();
@@ -210,20 +192,25 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		return true;
 	}
 	
-	public boolean removeEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en) {
+	public static boolean removeEnchant(@NotNull ItemStack item, @NotNull GoldenEnchant en) {
 		ItemUT.delLore(item, en.getId());
 		
 		ItemMeta meta = item.getItemMeta();
-		if (meta == null || !meta.hasEnchant(en)) return false;
+		if (meta == null) return false;
 		
-		meta.removeEnchant(en);
+		if (meta instanceof EnchantmentStorageMeta) {
+			((EnchantmentStorageMeta) meta).removeStoredEnchant(en);
+		}
+		else {
+			meta.removeEnchant(en);
+		}
 		item.setItemMeta(meta);
 		
 		return true;
 	}
 	
 	@NotNull
-	public Map<GoldenEnchant, Integer> getItemGoldenEnchants(@NotNull ItemStack item) {
+	public static Map<GoldenEnchant, Integer> getItemGoldenEnchants(@NotNull ItemStack item) {
 		Map<GoldenEnchant, Integer> map = new HashMap<>();
 		
 		ItemMeta meta = item.getItemMeta();
@@ -238,7 +225,7 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		}
 		
 		enchs.forEach((en, lvl) -> {
-			if (en instanceof GoldenEnchant) {
+			if (en instanceof GoldenEnchant && lvl > 0) {
 				map.put((GoldenEnchant) en, lvl);
 			}
 		});
@@ -246,56 +233,58 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		return map;
 	}
 	
-	public int getItemGoldenEnchantsAmount(@NotNull ItemStack item) {
-		return this.getItemGoldenEnchants(item).size();
+	@SuppressWarnings("unchecked")
+	@NotNull
+	public static <T> Map<T, Integer> getItemGoldenEnchants(@NotNull ItemStack item, @NotNull Class<T> clazz) {
+		Map<T, Integer> map = new HashMap<>();
+		
+		EnchantManager.getItemGoldenEnchants(item).forEach((en, level) -> {
+			if (!clazz.isAssignableFrom(en.getClass()) || level < 1) return;
+			map.put((T) en, level);
+		});
+		
+		return map;
 	}
 	
-	@Nullable
-	public EnchantTier getTierById(@NotNull String id) {
-		return this.tiers.get(id.toLowerCase());
+	public static int getItemGoldenEnchantsAmount(@NotNull ItemStack item) {
+		return getItemGoldenEnchants(item).size();
 	}
 	
 	@NotNull
-	public Collection<EnchantTier> getTiers() {
-		return this.tiers.values();
-	}
-	
-	@NotNull
-	public List<String> getTierIds() {
-		return new ArrayList<>(this.tiers.keySet());
-	}
-	
-	@NotNull
-	public List<GoldenEnchant> getTierEnchants(@NotNull String tier) {
-		return this.tierEnchants.getOrDefault(tier.toLowerCase(), new ArrayList<>());
-	}
-	
-	@Nullable
-	public EnchantTier getTierByChance() {
-		Map<EnchantTier, Double> map = new HashMap<>();
-		for (EnchantTier tier : this.tiers.values()) {
-			if (tier.getChance() <= 0) continue;
-			map.put(tier, tier.getChance());
+	public static Map<Enchantment, Integer> getItemEnchants(@NotNull ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		if (meta == null) return Collections.emptyMap();
+		
+		if (meta instanceof EnchantmentStorageMeta) {
+			return ((EnchantmentStorageMeta) meta).getStoredEnchants();
 		}
-		
-		return Rnd.getRandomItem(map, true);
+		else {
+			return meta.getEnchants();
+		}
+	}
+	
+	public static int getItemEnchantsAmount(@NotNull ItemStack item) {
+		return getItemEnchants(item).size();
 	}
 	
 	@Nullable
-	public GoldenEnchant getEnchantByTier(@NotNull EnchantTier tier) {
-		return this.getEnchantByTier(tier.getId(), -1);
+	public static EnchantTier getTierById(@NotNull String id) {
+		return Config.getTierById(id);
 	}
-
+	
+	@NotNull
+	public static Collection<EnchantTier> getTiers() {
+		return Config.getTiers();
+	}
+	
+	@NotNull
+	public static List<String> getTierIds() {
+		return Config.getTierIds();
+	}
+	
 	@Nullable
-	public GoldenEnchant getEnchantByTier(@NotNull String tier, int expLevel) {
-		Map<GoldenEnchant, Double> map = new HashMap<>();
-		
-		this.getTierEnchants(tier).stream().filter(en -> {
-			return en.getEnchantmentChance() > 0 && 
-					(expLevel < 0 || en.getTableMinPlayerLevel() <= expLevel);
-		}).forEach(en -> map.put(en, en.getEnchantmentChance()));
-		
-		return map.isEmpty() ? null : Rnd.getRandomItem(map, true);
+	public static EnchantTier getTierByChance(@NotNull ObtainType obtainType) {
+		return Config.getTierByChance(obtainType);
 	}
 	
 	public void setArrowWeapon(@NotNull Projectile pj, @NotNull ItemStack bow) {

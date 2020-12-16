@@ -82,11 +82,11 @@ public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnc
 	}
 	
 	@Nullable
-    public final ItemStack getTreasure(@NotNull Block b) {
-		Map<Material, Double> treasures = this.treasures.get(b.getType());
+    public final ItemStack getTreasure(@NotNull Block block) {
+		Map<Material, Double> treasures = this.treasures.get(block.getType());
 		if (treasures == null) return null;
 		
-		Material mat = Rnd.getRandomItem(treasures, true);
+		Material mat = Rnd.get(treasures);
 		return mat != null ? new ItemStack(mat) : null;
     }
 
