@@ -34,6 +34,7 @@ public class EnchantThrifty extends IEnchantChanceTemplate implements DeathEncha
 		super(plugin, cfg);
 		
 		cfg.addMissing("settings.spawn-reason-blacklist", Arrays.asList("SPAWNER"));
+		cfg.saveChanges();
 		
 		this.entityBlacklist = cfg.getStringSet("settings.entity-blacklist").stream()
 				.map(String::toUpperCase).collect(Collectors.toSet());

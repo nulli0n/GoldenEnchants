@@ -10,8 +10,12 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +30,8 @@ import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
 public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnchant {
 	
 	private Map<Material, Map<Material, Double>> treasures;
+	
+	private static final String META_USER_BLOCK = "GOLDENENCHANTS_TREASURES_FAKE_BLOCK";
 	
 	public EnchantTreasures(@NotNull GoldenEnchants plugin, @NotNull JYML cfg) {
 		super(plugin, cfg);
@@ -96,14 +102,24 @@ public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnc
 		
 		if (!this.checkTriggerChance(lvl)) return;
 		
-		Block b = e.getBlock();
+		Block block = e.getBlock();
+		if (block.hasMetadata(META_USER_BLOCK)) return;
 		
-	    ItemStack item = this.getTreasure(b);
+	    ItemStack item = this.getTreasure(block);
 	    if (item == null) return;
 	    
-	    Location loc = LocUT.getCenter(b.getLocation());
-	    b.getWorld().dropItemNaturally(loc, item);
-	    b.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 0.7f, 0.7f);
+	    Location loc = LocUT.getCenter(block.getLocation());
+	    block.getWorld().dropItemNaturally(loc, item);
+	    block.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 0.7f, 0.7f);
 	    EffectUT.playEffect(loc, "VILLAGER_HAPPY", 0.2f, 0.2f, 0.2f, 0.12f, 20);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onBlockDuplicationFix(BlockPlaceEvent e) {
+		Block block = e.getBlock();
+		Map<Material, Double> treasures = this.treasures.get(block.getType());
+		if (treasures == null) return;
+		
+		block.setMetadata(META_USER_BLOCK, new FixedMetadataValue(plugin, true));
 	}
 }
