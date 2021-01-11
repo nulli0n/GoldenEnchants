@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,7 +26,7 @@ public class PassiveEnchantsTask extends ITask<GoldenEnchants> {
 	public void action() {
     	for (LivingEntity entity : this.getEntities()) {
     		for (ItemStack armor : EntityUT.getEquipment(entity)) {
-    			if (armor == null) continue;
+    			if (armor == null || armor.getType() == Material.ENCHANTED_BOOK) continue;
     			
     			ItemMeta meta = armor.getItemMeta();
     			if (meta == null) continue;

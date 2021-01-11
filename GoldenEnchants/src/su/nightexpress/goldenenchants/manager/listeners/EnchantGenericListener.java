@@ -173,6 +173,7 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 		float priceMultiplier = recipe.getPriceMultiplier();
 		
 		MerchantRecipe recipe2 = new MerchantRecipe(result, uses, maxUses, expReward, villagerExperience, priceMultiplier);
+		recipe2.setIngredients(recipe.getIngredients());
 		e.setRecipe(recipe2);
 	}
 }

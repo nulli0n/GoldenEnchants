@@ -61,7 +61,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (equip == null) return;
 		
 		ItemStack wpn = equip.getItemInMainHand();
-		if (ItemUT.isAir(wpn)) return;
+		if (ItemUT.isAir(wpn) || wpn.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(wpn, CombatEnchant.class).forEach((combatEnchant, level) -> {
 			if (combatEnchant instanceof BowEnchant) return;
@@ -117,7 +117,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (shooter.getEquipment() == null) return;
 
 		ItemStack bow = e.getBow();
-		if (bow == null || ItemUT.isAir(bow)) return;
+		if (bow == null || ItemUT.isAir(bow) || bow.getType() == Material.ENCHANTED_BOOK) return;
 		
 		Projectile pj = (Projectile) e.getProjectile();
 		this.enchantManager.setArrowWeapon(pj, bow);
@@ -144,7 +144,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (!(src instanceof LivingEntity)) return;
 		
 		ItemStack wpn = this.enchantManager.getArrowWeapon(projectile);
-		if (wpn == null || wpn.getType() == Material.AIR) return;
+		if (wpn == null || wpn.getType() == Material.AIR || wpn.getType() == Material.ENCHANTED_BOOK) return;
 		
 		LivingEntity victim = (LivingEntity) eVictim;
 		LivingEntity damager = (LivingEntity) src;
@@ -166,7 +166,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		Projectile projectile = e.getEntity();
 		
 		ItemStack wpn = this.enchantManager.getArrowWeapon(projectile);
-		if (wpn == null || ItemUT.isAir(wpn)) return;
+		if (wpn == null || ItemUT.isAir(wpn) || wpn.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(wpn, LocationEnchant.class).forEach((locEnchant, level) -> {
 			if (!(locEnchant instanceof BowEnchant)) return;
@@ -183,7 +183,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (e.useItemInHand() == Result.DENY) return;
 		
 		ItemStack item = e.getItem();
-		if (item == null || ItemUT.isAir(item)) return;
+		if (item == null || ItemUT.isAir(item) || item.getType() == Material.ENCHANTED_BOOK) return;
 		
 		Player player = e.getPlayer();
 		EnchantManager.getItemGoldenEnchants(item, InteractEnchant.class).forEach((interEnchant, level) -> {
@@ -209,7 +209,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (killer == null) return;
 		
 		ItemStack wpn = killer.getInventory().getItemInMainHand();
-		if (ItemUT.isAir(wpn)) return;
+		if (ItemUT.isAir(wpn) || wpn.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(wpn, DeathEnchant.class).forEach((deathEnchant, level) -> {
 			deathEnchant.use(dead, e, level);
@@ -225,7 +225,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (player.getGameMode() == GameMode.CREATIVE) return;
 		
 		ItemStack tool = player.getInventory().getItemInMainHand();
-		if (ItemUT.isAir(tool)) return;
+		if (ItemUT.isAir(tool) || tool.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(tool, BlockEnchant.class).forEach((blockEnchant, level) -> {
 			blockEnchant.use(tool, player, e, level);
