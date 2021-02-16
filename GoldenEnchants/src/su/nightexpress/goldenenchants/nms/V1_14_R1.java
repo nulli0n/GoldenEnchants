@@ -16,6 +16,8 @@ import net.minecraft.server.v1_14_R1.Material;
 import net.minecraft.server.v1_14_R1.MathHelper;
 import net.minecraft.server.v1_14_R1.VoxelShapeCollision;
 import net.minecraft.server.v1_14_R1.World;
+import su.nexmedia.engine.utils.random.Rnd;
+import su.nightexpress.goldenenchants.manager.enchants.armor.EnchantFlameWalker;
 
 public class V1_14_R1 implements EnchantNMS {
 
@@ -45,6 +47,9 @@ public class V1_14_R1 implements EnchantNMS {
             if (!CraftEventFactory.handleBlockFormEvent(world, bNear, bStone, entity)) continue;
             
             world.getBlockTickList().a(bNear, Blocks.COBBLESTONE, MathHelper.nextInt(entity.getRandom(), 60, 120));
+            
+            Location loc2 = new Location(world.getWorld(), bNear.getX(), bNear.getY(), bNear.getZ());
+            EnchantFlameWalker.addBlock(loc2.getBlock(), Rnd.get(1, 6));
         }
 	}
 }

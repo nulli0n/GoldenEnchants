@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.manager.api.Cleanable;
 import su.nexmedia.engine.utils.Reflex;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.config.Config;
@@ -25,6 +26,7 @@ import su.nightexpress.goldenenchants.manager.enchants.armor.EnchantNightVision;
 import su.nightexpress.goldenenchants.manager.enchants.armor.EnchantSaturation;
 import su.nightexpress.goldenenchants.manager.enchants.armor.EnchantSelfDestruction;
 import su.nightexpress.goldenenchants.manager.enchants.armor.EnchantSonic;
+import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantBaneOfNetherspawn;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantBlindness;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantConfusion;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantCriticals;
@@ -34,6 +36,7 @@ import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantExecutioner
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantExhaust;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantExpHunter;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantIceAspect;
+import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantInfernus;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantParalyze;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantPigificator;
 import su.nightexpress.goldenenchants.manager.enchants.combat.EnchantRage;
@@ -77,7 +80,9 @@ public class EnchantRegister {
 	public static final EnchantTunnel			TUNNEL;
 	
 	public static final EnchantCriticals		CRITICALS;
+	public static final EnchantBaneOfNetherspawn BANE_OF_NETHERSPAWN;
 	public static final EnchantIceAspect 		ICE_ASPECT;
+	public static final EnchantInfernus			INFERNUS;
 	public static final EnchantVenom 			VENOM;
 	public static final EnchantExhaust 			EXHAUST;
 	public static final EnchantWither 			WITHER;
@@ -148,6 +153,7 @@ public class EnchantRegister {
 		TUNNEL = init(EnchantTunnel.class, "tunnel");
 		
 		// Weapon enchants
+		BANE_OF_NETHERSPAWN = init(EnchantBaneOfNetherspawn.class, "bane_of_netherspawn");
 		BLINDNESS = init(EnchantBlindness.class, "blindness");
 		CONFUSION = init(EnchantConfusion.class, "confusion");
 		CRITICALS = init(EnchantCriticals.class, "criticals");
@@ -157,6 +163,7 @@ public class EnchantRegister {
 		EXHAUST = init(EnchantExhaust.class, "exhaust");
 		EXP_HUNTER = init(EnchantExpHunter.class, "exp_hunter");
 		ICE_ASPECT = init(EnchantIceAspect.class, "ice_aspect");
+		INFERNUS = init(EnchantInfernus.class, "infernus");
 		PARALYZE = init(EnchantParalyze.class, "paralyze");
 		PIGIFICATOR = init(EnchantPigificator.class, "pigificator");
 		RAGE = init(EnchantRage.class, "rage");
@@ -244,6 +251,10 @@ public class EnchantRegister {
 	    if (byKey == null || byName == null) return;
 	    
 		for (GoldenEnchant enchant : ENCHANT_LIST) {
+			if (enchant instanceof Cleanable) {
+				((Cleanable)enchant).clear();
+			}
+			
 			byKey.remove(enchant.getKey());
 			byName.remove(enchant.getName());
 			enchant.unregisterListeners();

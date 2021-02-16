@@ -47,12 +47,27 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 		
 		ItemStack source = inv.getItem(0);
 		ItemStack book = inv.getItem(1);
-		
-		if (source == null || source.getType() == Material.AIR) return;
-		if (book != null && book.getType() != Material.ENCHANTED_BOOK && book.getAmount() > 1) return;
-		if (source.getType() != Material.ENCHANTED_BOOK && source.getAmount() > 1) return;
-		
 		ItemStack result = e.getResult();
+		
+		// Check if source item is an enchantable single item.
+		if (source == null || !EnchantManager.isEnchantable(source) || source.getAmount() > 1) return;
+		
+		// For repair/rename, only re-add item enchants.
+		if ((book == null || ItemUT.isAir(book) || !EnchantManager.isEnchantable(book)) && (result != null && result.getType() == source.getType())) {
+			ItemStack result2 = new ItemStack(result);
+			EnchantManager.getItemGoldenEnchants(source).forEach((en, lvl) -> {
+				EnchantManager.addEnchant(result2, en, lvl, true);
+				e.setResult(result2);
+			});
+			return;
+		}
+		// Check if the second item is an enchantable single item.
+		if (book == null || !EnchantManager.isEnchantable(book) || book.getAmount() > 1) return;
+		
+		// Prevent operation if first item is book while the second one is another item.
+		if (source.getType() == Material.ENCHANTED_BOOK && book.getType() != source.getType()) return;
+		
+		// Fine result item in case if it's nulled somehow.
 		if (result == null || result.getType() == Material.AIR) {
 			result = new ItemStack(source);
 		}
@@ -60,12 +75,15 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 		Map<GoldenEnchant, Integer> enchAdd = EnchantManager.getItemGoldenEnchants(source);
 		int cost = inv.getRepairCost();
 		
-		if (book != null && (book.getType() == Material.ENCHANTED_BOOK || book.getType() == source.getType())) {
+		// If the second item is an enchanted book or the same item type, then
+		// we can merge item golden enchantments.
+		if (book.getType() == Material.ENCHANTED_BOOK || book.getType() == source.getType()) {
 			for (Map.Entry<GoldenEnchant, Integer> en : EnchantManager.getItemGoldenEnchants(book).entrySet()) {
 				enchAdd.merge(en.getKey(), en.getValue(), (oldLvl, newLvl) -> (oldLvl == newLvl) ? (oldLvl + 1) : (Math.max(oldLvl, newLvl)));
 			}
 		}
 		
+		// Recalculate operation cost depends on golden enchantments merge cost by its level.
 		for (Map.Entry<GoldenEnchant, Integer> ent : enchAdd.entrySet()) {
 			GoldenEnchant enchant = ent.getKey();
 			int lvl = Math.min(enchant.getMaxLevel(), ent.getValue());

@@ -92,7 +92,8 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 	
 	public static boolean isEnchantable(@NotNull ItemStack item) {
 		return item.getType() == Material.ENCHANTED_BOOK 
-				|| ItemUT.isWeapon(item) || ItemUT.isArmor(item);
+				|| ItemUT.isWeapon(item) || ItemUT.isArmor(item) || ItemUT.isTool(item)
+				|| ItemUT.isBow(item);
 	}
 	
 	public static void populateEnchantments(@NotNull ItemStack item, @NotNull ObtainType obtainType) {

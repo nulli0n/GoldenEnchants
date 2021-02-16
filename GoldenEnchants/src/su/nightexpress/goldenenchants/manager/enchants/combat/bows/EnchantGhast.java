@@ -31,7 +31,8 @@ public class EnchantGhast extends IEnchantChanceTemplate implements BowEnchant {
 	
 	@Override
 	public boolean conflictsWith(@Nullable Enchantment en) {
-		return en == EnchantRegister.BOMBER || en == EnchantRegister.ENDER_BOW;
+		return en == EnchantRegister.BOMBER || en == EnchantRegister.ENDER_BOW
+				|| en == MULTISHOT;
 	}
 
 	@Override

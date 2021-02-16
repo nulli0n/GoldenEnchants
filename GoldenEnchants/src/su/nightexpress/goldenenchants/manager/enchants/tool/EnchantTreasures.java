@@ -109,7 +109,7 @@ public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnc
 	    if (item == null) return;
 	    
 	    Location loc = LocUT.getCenter(block.getLocation());
-	    block.getWorld().dropItemNaturally(loc, item);
+	    block.getWorld().dropItem(loc, item);
 	    block.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 0.7f, 0.7f);
 	    EffectUT.playEffect(loc, "VILLAGER_HAPPY", 0.2f, 0.2f, 0.2f, 0.12f, 20);
 	}
