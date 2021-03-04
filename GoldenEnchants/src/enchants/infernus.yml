@@ -1,5 +1,6 @@
 name: 'Infernus'
 tier: 'common'
+description: '%chance%% chance to launch flame Trident that ignites enemy for %duration%s.'
 level:
   min: 1
   max: 2

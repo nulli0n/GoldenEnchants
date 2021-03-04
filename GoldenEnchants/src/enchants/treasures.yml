@@ -1,5 +1,6 @@
 name: 'Treasures'
 tier: 'exotic'
+description: '%chance%% chance to find additional loot when mining/digging.'
 level:
   min: 1
   max: 4

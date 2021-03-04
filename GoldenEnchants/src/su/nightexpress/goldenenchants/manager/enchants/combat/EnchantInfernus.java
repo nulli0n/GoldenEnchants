@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 
@@ -30,6 +31,13 @@ public class EnchantInfernus extends IEnchantChanceTemplate {
 		this.loadMapValues(this.fireTicks, "settings.fire-ticks");
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%duration%", NumberUT.format((double)this.getMapValue(this.fireTicks, lvl, 0) / 20D));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return item.getType() == Material.TRIDENT;

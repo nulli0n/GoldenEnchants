@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.DeathEnchant;
@@ -25,6 +26,23 @@ public class EnchantExpHunter extends IEnchantChanceTemplate implements DeathEnc
 		this.expMod = new TreeMap<>();
 		
 		this.loadMapValues(this.expMod, "settings.exp-modifier");
+	}
+	
+	@Override
+	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
+		if (!this.checkTriggerChance(lvl)) return;
+		
+		double mod = this.getExpModifier(lvl);
+		double exp = e.getDroppedExp() * mod;
+		
+		e.setDroppedExp((int) Math.ceil(exp));
+	}
+
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%exp%", NumberUT.format(this.getExpModifier(lvl)));
 	}
 	
 	@Override
@@ -56,15 +74,5 @@ public class EnchantExpHunter extends IEnchantChanceTemplate implements DeathEnc
 	public final double getExpModifier(int lvl) {
 		Map.Entry<Integer, Double> e = this.expMod.floorEntry(lvl);
 		return e != null ? e.getValue() : (1D + lvl / 10D);
-	}
-	
-	@Override
-	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
-		if (!this.checkTriggerChance(lvl)) return;
-		
-		double mod = this.getExpModifier(lvl);
-		double exp = e.getDroppedExp() * mod;
-		
-		e.setDroppedExp((int) Math.ceil(exp));
 	}
 }

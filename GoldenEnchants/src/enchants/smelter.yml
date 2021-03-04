@@ -1,5 +1,6 @@
 name: 'Smelter'
 tier: 'rare'
+description: '%chance%% chance to smelt ore on mining.'
 level:
   min: 1
   max: 7

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -47,6 +48,13 @@ public class EnchantVillageDefender extends IEnchantChanceTemplate implements Co
 		EffectUT.playEffect(victim.getEyeLocation(), this.effectParticle, 0.15, 0.15, 0.15, 0.13f, 3);
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%damage%", NumberUT.format(this.getMapValue(this.dmgAddict, lvl, 0)));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return this.isSword(item);

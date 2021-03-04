@@ -1,5 +1,6 @@
 name: 'Venom'
 tier: 'rare'
+description: '%chance%% chance to apply %potion-effect% %potion-level% for %potion-duration%s. on hit.'
 level:
   min: 1
   max: 2

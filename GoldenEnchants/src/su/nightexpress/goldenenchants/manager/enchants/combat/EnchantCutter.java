@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.EffectUT;
 import su.nexmedia.engine.utils.MsgUT;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
@@ -34,37 +35,6 @@ public class EnchantCutter extends IEnchantChanceTemplate implements CombatEncha
 		this.damageMod = new TreeMap<>();
 		
 		this.loadMapValues(this.damageMod, "settings.item-damage-modifier");
-	}
-	
-	@Override
-	public boolean conflictsWith(@Nullable Enchantment en) {
-		return false;
-	}
-	
-	@Override
-	public boolean isCursed() {
-		return false;
-	}
-	
-	@Override
-	public boolean isTreasure() {
-		return false;
-	}
-
-	@Override
-	public boolean canEnchant(@NotNull ItemStack item) {
-		return this.isSword(item);
-	}
-
-	@Override
-	@NotNull
-	public EnchantmentTarget getItemTarget() {
-		return EnchantmentTarget.WEAPON;
-	}
-
-	public final double getDamageModifier(int lvl) {
-		Map.Entry<Integer, Double> e = this.damageMod.floorEntry(lvl);
-		return e != null ? e.getValue() : 1.25;
 	}
 	
 	@Override
@@ -99,5 +69,43 @@ public class EnchantCutter extends IEnchantChanceTemplate implements CombatEncha
 		
 		EffectUT.playEffect(victim.getEyeLocation(), "ITEM_CRACK:" + cut.getType().name(), 0.2f, 0.15f, 0.2f, 0.15f, 40);
 		MsgUT.sound(victim.getLocation(), Sound.BLOCK_ANVIL_BREAK.name());
+	}
+
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%damage%", NumberUT.format(this.getMapValue(this.damageMod, lvl, 0) * 100D));
+	}
+	
+	@Override
+	public boolean conflictsWith(@Nullable Enchantment en) {
+		return false;
+	}
+	
+	@Override
+	public boolean isCursed() {
+		return false;
+	}
+	
+	@Override
+	public boolean isTreasure() {
+		return false;
+	}
+
+	@Override
+	public boolean canEnchant(@NotNull ItemStack item) {
+		return this.isSword(item);
+	}
+
+	@Override
+	@NotNull
+	public EnchantmentTarget getItemTarget() {
+		return EnchantmentTarget.WEAPON;
+	}
+
+	public final double getDamageModifier(int lvl) {
+		Map.Entry<Integer, Double> e = this.damageMod.floorEntry(lvl);
+		return e != null ? e.getValue() : 1.25;
 	}
 }

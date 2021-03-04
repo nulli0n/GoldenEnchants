@@ -1,5 +1,6 @@
 name: 'Exp Hunter'
 tier: 'exotic'
+description: '%chance%% chance to drop x%exp% more exp on kill.'
 level:
   min: 1
   max: 6

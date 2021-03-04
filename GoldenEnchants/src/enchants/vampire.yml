@@ -1,5 +1,6 @@
 name: 'Vampire'
 tier: 'exotic'
+description: '%chance%% chance to heal yourself for %modifier%% of damage on hit.'
 level:
   min: 1
   max: 4
@@ -15,4 +16,4 @@ loot-generation:
 settings:
   enchant-trigger-chance: '20.0 * %level%'
   enchant-particle-effect: 'HEART'
-  heal-modifier: '%damage% * 0.2'
+  damage-heal-modifier: '0.%level% + 0.2'

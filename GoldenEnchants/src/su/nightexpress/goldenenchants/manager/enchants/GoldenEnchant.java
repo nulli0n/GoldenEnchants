@@ -36,6 +36,7 @@ public abstract class GoldenEnchant extends Enchantment implements AbstractListe
 	
 	protected String display;
 	protected EnchantTier tier;
+	protected String description;
 	protected int minLvl;
 	protected int maxLvl;
 	protected int tablePlayerLvl;
@@ -116,6 +117,7 @@ public abstract class GoldenEnchant extends Enchantment implements AbstractListe
 			throw new IllegalStateException("Invalid tier provided for the '" + id + "' enchantment!");
 		}
 		this.tier.getEnchants().add(this);
+		this.description = StringUT.color(cfg.getString("description", ""));
 		this.minLvl = cfg.getInt("level.min");
 		this.maxLvl = cfg.getInt("level.max");
 		this.tablePlayerLvl = cfg.getInt("enchantment-table.min-player-level");
@@ -145,6 +147,11 @@ public abstract class GoldenEnchant extends Enchantment implements AbstractListe
 	@NotNull
 	public final String getId() {
 		return this.id;
+	}
+	
+	@NotNull
+	public String getDescription(int lvl) {
+		return this.description;
 	}
 	
 	public abstract boolean canEnchant(@NotNull ItemStack item);

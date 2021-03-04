@@ -59,6 +59,7 @@ import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantBlastMining;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantDivineTouch;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantLuckyMiner;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantReplanter;
+import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantSilkChest;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantSmelter;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantTelekinesis;
 import su.nightexpress.goldenenchants.manager.enchants.tool.EnchantTreasures;
@@ -74,6 +75,7 @@ public class EnchantRegister {
 	public static final EnchantHaste			HASTE;
 	public static final EnchantLuckyMiner		LUCKY_MINER;
 	public static final EnchantReplanter		REPLANTER;
+	public static final EnchantSilkChest		SILK_CHEST;
 	public static final EnchantSmelter 			SMELTER;
 	public static final EnchantTelekinesis		TELEKINESIS;
 	public static final EnchantTreasures 		TREASURES;
@@ -147,6 +149,7 @@ public class EnchantRegister {
 		HASTE = init(EnchantHaste.class, "haste");
 		LUCKY_MINER = init(EnchantLuckyMiner.class, "lucky_miner");
 		REPLANTER = init(EnchantReplanter.class, "replanter");
+		SILK_CHEST = init(EnchantSilkChest.class, "silk_chest");
 		SMELTER = init(EnchantSmelter.class, "smelter");
 		TELEKINESIS = init(EnchantTelekinesis.class, "telekinesis");
 		TREASURES = init(EnchantTreasures.class, "treasures");

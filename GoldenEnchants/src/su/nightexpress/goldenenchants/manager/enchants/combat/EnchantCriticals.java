@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -42,6 +43,13 @@ public class EnchantCriticals extends IEnchantChanceTemplate implements CombatEn
 		e.setDamage(e.getDamage() * this.getDamageModifier(lvl));
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%damage%", NumberUT.format(this.getMapValue(this.damageModifier, lvl, 0)));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return this.isSword(item);

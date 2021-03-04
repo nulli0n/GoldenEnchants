@@ -1,5 +1,6 @@
 name: 'Bane of Netherspawn'
 tier: 'common'
+description: '%chance%% chance to inflict %damage% more damage to Nether mobs.'
 level:
   min: 1
   max: 5

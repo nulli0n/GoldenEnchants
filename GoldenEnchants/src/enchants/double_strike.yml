@@ -1,5 +1,6 @@
 name: 'Double Strike'
 tier: 'legendary'
+description: '%chance%% chance to inflict double damage.'
 level:
   min: 1
   max: 4

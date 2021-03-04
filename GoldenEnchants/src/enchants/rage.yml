@@ -1,5 +1,6 @@
 name: 'Rage'
 tier: 'rare'
+description: '%chance%% chance to get %potion-effect% %potion-level% effect for %potion-duration%s. in combat.'
 level:
   min: 1
   max: 2

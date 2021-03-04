@@ -1,5 +1,6 @@
 name: 'Executioner'
 tier: 'rare'
+description: '%chance%% chance to drop enemy''s head.'
 level:
   min: 1
   max: 4

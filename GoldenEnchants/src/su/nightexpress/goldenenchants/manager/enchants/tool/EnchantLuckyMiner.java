@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
@@ -33,6 +34,13 @@ public class EnchantLuckyMiner extends IEnchantChanceTemplate implements BlockEn
 		e.setExpToDrop((int) ((double) e.getExpToDrop() * expMod));
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%exp%", NumberUT.format(this.getMapValue(this.expModifier, lvl, 0)));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return ITEM_PICKAXES.contains(item.getType());

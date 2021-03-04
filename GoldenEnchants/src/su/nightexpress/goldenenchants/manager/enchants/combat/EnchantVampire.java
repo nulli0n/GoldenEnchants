@@ -1,5 +1,7 @@
 package su.nightexpress.goldenenchants.manager.enchants.combat;
 
+import java.util.TreeMap;
+
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -14,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.EffectUT;
 import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.eval.Evaluator;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -22,14 +23,39 @@ import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
 public class EnchantVampire extends IEnchantChanceTemplate implements CombatEnchant {
 	
 	private String enchantParticle;
-	private String healMod;
+	private TreeMap<Integer, Double> healMod;
 	
 	public EnchantVampire(@NotNull GoldenEnchants plugin, @NotNull JYML cfg) {
 		super(plugin, cfg);
 		
 		String path = "settings.";
 		this.enchantParticle = cfg.getString(path + "enchant-particle-effect", Particle.HEART.name());
-		this.healMod = cfg.getString(path + "heal-modifier", "%damage% * 0.2");
+		this.healMod = new TreeMap<>();
+		this.loadMapValues(this.healMod, path + "damage-heal-modifier");
+	}
+	
+	@Override
+	public void use(@NotNull ItemStack weapon, @NotNull LivingEntity damager,
+			@NotNull LivingEntity victim, @NotNull EntityDamageByEntityEvent e, int lvl) {
+		
+		if (!this.checkTriggerChance(lvl)) return;
+		
+		AttributeInstance ai = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+		if (ai == null) return;
+		
+		double healMod = e.getDamage() * this.getMapValue(this.healMod, lvl, 0.2);
+		double healMax = NumberUT.round(ai.getValue());
+		
+		damager.setHealth(Math.min(healMax, damager.getHealth() + healMod));
+		
+		EffectUT.playEffect(damager.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 5);
+	}
+
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%modifier%", NumberUT.format(this.getMapValue(this.healMod, lvl, 0.2) * 100D));
 	}
 	
 	@Override
@@ -56,26 +82,5 @@ public class EnchantVampire extends IEnchantChanceTemplate implements CombatEnch
 	@Override
 	public boolean isTreasure() {
 		return false;
-	}
-
-	@Override
-	public void use(@NotNull ItemStack weapon, @NotNull LivingEntity damager,
-			@NotNull LivingEntity victim, @NotNull EntityDamageByEntityEvent e, int lvl) {
-		
-		if (!this.checkTriggerChance(lvl)) return;
-		
-		AttributeInstance ai = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-		if (ai == null) return;
-		
-		String expression = this.healMod
-				.replace("%level%", String.valueOf(lvl))
-				.replace("%damage%", NumberUT.format(e.getDamage()));
-		
-		double healMod = Evaluator.eval(expression, 1);
-		double healMax = NumberUT.round(ai.getValue());
-		
-		damager.setHealth(Math.min(healMax, damager.getHealth() + healMod));
-		
-		EffectUT.playEffect(damager.getEyeLocation(), this.enchantParticle, 0.2f, 0.15f, 0.2f, 0.15f, 5);
 	}
 }

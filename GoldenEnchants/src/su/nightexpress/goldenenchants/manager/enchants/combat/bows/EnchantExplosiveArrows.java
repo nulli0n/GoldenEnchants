@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.BowEnchant;
@@ -39,6 +40,13 @@ public class EnchantExplosiveArrows extends IEnchantChanceTemplate implements Lo
 		this.arrowTrail = cfg.getString("settings.arrow-trail", Particle.SMOKE_NORMAL.name());
 		
 		this.loadMapValues(this.explosionSize, "settings.explosion-size");
+	}
+
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%power%", NumberUT.format(this.getMapValue(this.explosionSize, lvl, 0)));
 	}
 	
 	@Override

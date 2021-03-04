@@ -1,5 +1,6 @@
 name: 'Ender Bow'
 tier: 'legendary'
+description: '%chance%% chance to shoot Ender Pearl.'
 level:
   min: 1
   max: 1

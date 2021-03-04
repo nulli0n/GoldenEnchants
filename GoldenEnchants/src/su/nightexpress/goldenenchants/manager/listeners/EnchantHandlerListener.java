@@ -48,6 +48,8 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 	// ---------------------------------------------------------------
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onEnchantCombatMeleeApply(EntityDamageByEntityEvent e) {
+		if (e.getCause() == DamageCause.THORNS) return;
+		
 		Entity eVictim = e.getEntity();
 		if (!(eVictim instanceof LivingEntity)) return;
 		

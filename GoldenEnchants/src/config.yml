@@ -19,6 +19,9 @@ general:
     bow-enchants-applies-to-crossbows: true
     elytra-as-chestplate: true
     allow-passive-enchants-for-mobs: false
+    description:
+      enabled: true
+      format: '&8▸ %description%'
   enchantment-table:
     max-golden-enchants: 2
     golden-enchant-chance: 60.0

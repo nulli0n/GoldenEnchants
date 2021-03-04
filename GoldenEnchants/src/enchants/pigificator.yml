@@ -1,5 +1,6 @@
 name: 'Pigificator'
 tier: 'common'
+description: '%chance%% chance to turn Piglins back to Pigs on hit.'
 level:
   min: 1
   max: 5

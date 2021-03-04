@@ -17,6 +17,7 @@ import com.google.common.collect.Sets;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.core.Version;
 import su.nexmedia.engine.utils.EffectUT;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.CombatEnchant;
@@ -65,6 +66,13 @@ public class EnchantBaneOfNetherspawn extends IEnchantChanceTemplate implements 
 		EffectUT.playEffect(victim.getEyeLocation(), this.effect, 0.25, 0.25, 0.25, 0.1f, 30);
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%damage%", NumberUT.format(this.getMapValue(this.damageFormula, lvl, 0)));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return this.isSword(item);

@@ -1,5 +1,6 @@
 name: 'Rocket'
 tier: 'exotic'
+description: '%chance%% chance to launch your enemy into the space.'
 level:
   min: 1
   max: 4

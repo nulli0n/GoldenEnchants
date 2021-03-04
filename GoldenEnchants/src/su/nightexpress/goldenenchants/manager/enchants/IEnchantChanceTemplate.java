@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import org.jetbrains.annotations.NotNull;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 
@@ -20,6 +21,13 @@ public abstract class IEnchantChanceTemplate extends GoldenEnchant {
 		this.loadMapValues(this.effectChance, "settings.enchant-trigger-chance");
 	}
 	
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%chance%", NumberUT.format(this.getTriggerChance(lvl)));
+	}
+
 	public final double getTriggerChance(int lvl) {
 		Map.Entry<Integer, Double> e = this.effectChance.floorEntry(lvl);
 		return e != null ? e.getValue() : 100D;

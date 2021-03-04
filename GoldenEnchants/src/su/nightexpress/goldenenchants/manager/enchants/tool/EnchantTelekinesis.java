@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.ItemUT;
 import su.nexmedia.engine.utils.LocUT;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;
@@ -53,6 +54,13 @@ public class EnchantTelekinesis extends IEnchantChanceTemplate implements Passiv
 			Vector dir = LocUT.getDirectionTo(item.getLocation(), user.getLocation());
 			item.setVelocity(dir.multiply(power));
 		});
+	}
+
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%radius%", NumberUT.format(this.getMapValue(this.radHorizon, lvl, 0)));
 	}
 	
 	@Override

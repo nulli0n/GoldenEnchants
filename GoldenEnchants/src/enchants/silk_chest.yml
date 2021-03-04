@@ -1,9 +1,9 @@
-name: 'Bomber'
-tier: 'exotic'
-description: '%chance%% chance to launch TNT instead of an arrow.'
+name: 'Silk Chest'
+tier: 'rare'
+description: 'Drop chests and saves all its content.'
 level:
   min: 1
-  max: 3
+  max: 1
 enchantment-table:
   min-player-level: 30
   chance: 15.0
@@ -14,4 +14,5 @@ villagers:
 loot-generation:
   chance: 15.0
 settings:
-  enchant-trigger-chance: '3.0 * %level%'
+  enchant-trigger-chance: '100.0'
+  chest-name: '&f%name% &7(%items% items)'

@@ -1,5 +1,6 @@
 name: 'Replanter'
 tier: 'common'
+description: 'Automatically replants growth plants on click.'
 level:
   min: 1
   max: 1

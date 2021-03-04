@@ -140,13 +140,22 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		
 		EnchantRegister.ENCHANT_LIST.forEach(ench -> {
 			ItemUT.delLore(item, ench.getId());
+			ItemUT.delLore(item, ench.getId() + "_info");
 		});
 		
 		enchants.forEach((en, level) -> {
 			if (!(en instanceof GoldenEnchant)) return;
 			
-			GoldenEnchant ge = (GoldenEnchant) en;
-			ItemUT.addLore(item, ge.getId(), ge.getFormatted(level), 0);
+			GoldenEnchant ench = (GoldenEnchant) en;
+			ItemUT.addLore(item, ench.getId(), ench.getFormatted(level), 0);
+			
+			// Add enchantment description at the end of item lore.
+			if (Config.GEN_ENCHANTS_DESC_ENABLED) {
+				String desc = ench.getDescription(level);
+				if (desc.isEmpty()) return;
+				
+				ItemUT.addLore(item, ench.getId() + "_info", Config.GEN_ENCHANTS_DESC_FORMAT.replace("%description%", desc), -1);
+			}
 		});
 	}
 	

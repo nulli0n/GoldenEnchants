@@ -1,5 +1,6 @@
 name: 'Cutter'
 tier: 'exotic'
+description: '%chance%% chance to throw away enemy armor and damage it for %damage%%.'
 level:
   min: 1
   max: 5

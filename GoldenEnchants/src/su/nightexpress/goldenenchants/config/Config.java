@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.IConfigTemplate;
+import su.nexmedia.engine.utils.StringUT;
 import su.nexmedia.engine.utils.random.Rnd;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.EnchantTier;
@@ -24,18 +25,21 @@ public class Config extends IConfigTemplate {
 		super(plugin);
 	}
 	
-	public static long GEN_TASK_ARROW_TRAIL_TICK_TIME;
-	public static long GEN_TASK_PASSIVE_ENCHANT_TICK_TIME;
+	public static long 			GEN_TASK_ARROW_TRAIL_TICK_TIME;
+	public static long 			GEN_TASK_PASSIVE_ENCHANT_TICK_TIME;
 	
-	public static Set<String> GEN_ENCHANTS_DISABLED;
-	public static int GEN_ENCHANTS_MAX_FOR_ITEM;
-	public static boolean GEN_ENCHANTS_SWORDS_TO_AXES;
-	public static boolean GEN_ENCHANTS_BOWS_TO_CROSSBOWS;
-	public static boolean GEN_ENCHANTS_ELYTRA_TO_CHESTPLATE;
-	public static boolean GEN_ENCHANTS_PASSIVE_FOR_MOBS;
+	public static Set<String> 	GEN_ENCHANTS_DISABLED;
+	public static int 			GEN_ENCHANTS_MAX_FOR_ITEM;
+	public static boolean 		GEN_ENCHANTS_SWORDS_TO_AXES;
+	public static boolean 		GEN_ENCHANTS_BOWS_TO_CROSSBOWS;
+	public static boolean 		GEN_ENCHANTS_ELYTRA_TO_CHESTPLATE;
+	public static boolean 		GEN_ENCHANTS_PASSIVE_FOR_MOBS;
 	
-	public static int GEN_TABLE_MAX_ENCHANTS;
-	public static double GEN_TABLE_ENCHANT_CHANCE;
+	public static boolean 		GEN_ENCHANTS_DESC_ENABLED;
+	public static String 		GEN_ENCHANTS_DESC_FORMAT;
+	
+	public static int 			GEN_TABLE_MAX_ENCHANTS;
+	public static double 		GEN_TABLE_ENCHANT_CHANCE;
 	
 	public static boolean 		VILLAGERS_ENABLED;
 	public static int 			VILLAGERS_ENCHANTS_TOTAL_MAX;
@@ -61,6 +65,8 @@ public class Config extends IConfigTemplate {
     	cfg.addMissing(path + "elytra-as-chestplate", true);
     	cfg.addMissing(path + "disabled", Arrays.asList("enchant_name1", "enchant_name2"));
     	cfg.addMissing(path + "allow-passive-enchants-for-mobs", false);
+    	cfg.addMissing(path + "description.enabled", true);
+    	cfg.addMissing(path + "description.format", "&8▸ %description%");
     	
     	GEN_ENCHANTS_DISABLED = cfg.getStringSet(path + "disabled").stream()
     			.map(String::toLowerCase).collect(Collectors.toSet());
@@ -69,6 +75,9 @@ public class Config extends IConfigTemplate {
     	GEN_ENCHANTS_BOWS_TO_CROSSBOWS = cfg.getBoolean(path + "bow-enchants-applies-to-crossbows");
     	GEN_ENCHANTS_ELYTRA_TO_CHESTPLATE = cfg.getBoolean(path + "elytra-as-chestplate");
     	GEN_ENCHANTS_PASSIVE_FOR_MOBS = cfg.getBoolean(path + "allow-passive-enchants-for-mobs");
+    	
+    	GEN_ENCHANTS_DESC_ENABLED = cfg.getBoolean(path + "description.enabled");
+    	GEN_ENCHANTS_DESC_FORMAT = StringUT.color(cfg.getString(path + "description.format", ""));
     	
     	path = "general.enchantment-table.";
     	GEN_TABLE_MAX_ENCHANTS = cfg.getInt(path + "max-golden-enchants", 2);

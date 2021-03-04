@@ -1,5 +1,6 @@
 name: 'Lucky Miner'
 tier: 'common'
+description: '%chance%% chance to drop x%exp% more exp from ores.'
 level:
   min: 1
   max: 3

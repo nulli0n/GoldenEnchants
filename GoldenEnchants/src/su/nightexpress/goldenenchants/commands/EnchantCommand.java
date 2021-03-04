@@ -76,12 +76,12 @@ public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 		String en = args[1].toLowerCase();
 		Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(en));
 		if (e == null) {
-			plugin.lang().Error_NoEnchant.send(sender, true);
+			plugin.lang().Error_NoEnchant.send(sender);
 			return;
 		}
 		
 		int lvl = this.getNumI(sender, args[2], -1, true);
-		if (lvl < 1) {
+		if (lvl < 0) {
 			lvl = Rnd.get(e.getStartLevel(), e.getMaxLevel());
 		}
 		
@@ -89,14 +89,24 @@ public class EnchantCommand extends ISubCommand<GoldenEnchants> {
 		if (meta == null) return;
 		
 		if (meta instanceof EnchantmentStorageMeta) {
-	        ((EnchantmentStorageMeta)meta).addStoredEnchant(e, lvl, true);
+			if (lvl == 0) {
+				((EnchantmentStorageMeta)meta).removeStoredEnchant(e);
+			}
+			else {
+				((EnchantmentStorageMeta)meta).addStoredEnchant(e, lvl, true);
+			}
 		}
 		else {
-			meta.addEnchant(e, lvl, true);
+			if (lvl == 0) {
+				meta.removeEnchant(e);
+			}
+			else {
+				meta.addEnchant(e, lvl, true);
+			}
 		}
 		item.setItemMeta(meta);
 		EnchantManager.updateItemLoreEnchants(item);
 		
-		plugin.lang().Command_Enchant_Done.send(sender, true);
+		plugin.lang().Command_Enchant_Done.send(sender);
 	}
 }

@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;
 
@@ -31,6 +32,15 @@ public abstract class IEnchantPotionTemplate extends IEnchantChanceTemplate {
 		
 		this.loadMapValues(this.effectDuration, "settings.effect-duration");
 		this.loadMapValues(this.effectLevel, "settings.effect-level");
+	}
+	
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%potion-level%", NumberUT.toRoman(this.getEffectLevel(lvl)))
+				.replace("%potion-duration%", NumberUT.format((double)this.getEffectDuration(lvl) / 20D))
+				.replace("%potion-effect%", plugin.lang().getPotionType(this.getPotionEffectType()));
 	}
 	
 	@NotNull

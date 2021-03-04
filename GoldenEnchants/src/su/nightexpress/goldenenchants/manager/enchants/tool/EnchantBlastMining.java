@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.EnchantRegister;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
@@ -38,6 +39,13 @@ public class EnchantBlastMining extends IEnchantChanceTemplate implements BlockE
 		block.getWorld().createExplosion(block.getLocation(), power, false, true, p);
 	}
 
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%power%", NumberUT.format(this.getMapValue(this.explosionPower, lvl, 0)));
+	}
+	
 	@Override
 	public boolean canEnchant(@NotNull ItemStack item) {
 		return ITEM_PICKAXES.contains(item.getType());

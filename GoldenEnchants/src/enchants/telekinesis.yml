@@ -1,5 +1,6 @@
 name: 'Telekinesis'
 tier: 'rare'
+description: 'Moves all items to you in %radius% block radius.'
 level:
   min: 1
   max: 3

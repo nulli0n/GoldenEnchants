@@ -1,5 +1,6 @@
 name: 'Night Vision'
 tier: 'common'
+description: 'Grants permanent %potion-effect% %potion-level% effect.'
 level:
   min: 1
   max: 1

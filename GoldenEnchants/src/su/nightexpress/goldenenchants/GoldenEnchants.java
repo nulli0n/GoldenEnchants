@@ -8,7 +8,6 @@ import su.nexmedia.engine.core.Version;
 import su.nexmedia.engine.utils.Reflex;
 import su.nightexpress.goldenenchants.commands.BookCommand;
 import su.nightexpress.goldenenchants.commands.EnchantCommand;
-import su.nightexpress.goldenenchants.commands.ListCommand;
 import su.nightexpress.goldenenchants.commands.TierbookCommand;
 import su.nightexpress.goldenenchants.config.Config;
 import su.nightexpress.goldenenchants.config.Lang;
@@ -84,7 +83,6 @@ public class GoldenEnchants extends NexPlugin<GoldenEnchants> {
 	public void registerCmds(@NotNull IGeneralCommand<GoldenEnchants> mainCommand) {
 		mainCommand.addSubCommand(new BookCommand(this));
 		mainCommand.addSubCommand(new EnchantCommand(this));
-		mainCommand.addSubCommand(new ListCommand(this));
 		mainCommand.addSubCommand(new TierbookCommand(this));
 	}
 

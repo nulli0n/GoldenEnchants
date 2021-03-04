@@ -75,13 +75,13 @@ public class TierbookCommand extends ISubCommand<GoldenEnchants> {
 		String en = args[2].toLowerCase();
 		EnchantTier tier = EnchantManager.getTierById(en);
 		if (tier == null) {
-			plugin.lang().Command_TierBook_Error.send(sender, true);
+			plugin.lang().Command_TierBook_Error.send(sender);
 			return;
 		}
 		
 		GoldenEnchant ench = tier.getEnchant(ObtainType.ENCHANTING);
 		if (ench == null) {
-			plugin.lang().Error_NoEnchant.send(sender, true);
+			plugin.lang().Error_NoEnchant.send(sender);
 			return;
 		}
 		
@@ -97,6 +97,6 @@ public class TierbookCommand extends ISubCommand<GoldenEnchants> {
 		plugin.lang().Command_TierBook_Done
 				.replace("%enchant%", tier.getName())
 				.replace("%player%", p.getName())
-				.send(sender, true);
+				.send(sender);
 	}
 }

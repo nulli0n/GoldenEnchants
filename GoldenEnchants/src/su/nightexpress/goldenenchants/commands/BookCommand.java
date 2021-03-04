@@ -80,7 +80,7 @@ public class BookCommand extends ISubCommand<GoldenEnchants> {
 		String enchantName = args[2].toLowerCase();
 		Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(enchantName));
 		if (e == null) {
-			plugin.lang().Error_NoEnchant.send(sender, true);
+			plugin.lang().Error_NoEnchant.send(sender);
 			return;
 		}
 		
@@ -102,6 +102,6 @@ public class BookCommand extends ISubCommand<GoldenEnchants> {
 		plugin.lang().Command_Book_Done
 			.replace("%enchant%", enchantName)
 			.replace("%player%", p.getName())
-			.send(sender, true);
+			.send(sender);
 	}
 }
