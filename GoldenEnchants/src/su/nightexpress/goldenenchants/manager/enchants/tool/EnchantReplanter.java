@@ -120,7 +120,7 @@ public class EnchantReplanter extends IEnchantChanceTemplate implements Interact
 	private Material fineSeedsToBlock(@NotNull Material material) {
 		if (material == Material.POTATO) return Material.POTATOES;
 		if (material == Material.CARROT) return Material.CARROTS;
-		if (material == Material.BEETROOT) return Material.BEETROOTS;
+		if (material == Material.BEETROOT_SEEDS) return Material.BEETROOTS;
 		if (material == Material.WHEAT_SEEDS) return Material.WHEAT;
 		if (material == Material.PUMPKIN_SEEDS) return Material.PUMPKIN_STEM;
 		if (material == Material.MELON_SEEDS) return Material.MELON_STEM;
