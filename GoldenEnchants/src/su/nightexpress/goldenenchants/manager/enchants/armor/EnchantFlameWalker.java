@@ -62,10 +62,10 @@ public class EnchantFlameWalker extends IEnchantChanceTemplate implements MoveEn
 	}
 
 	@Override
-	public void use(@NotNull PlayerMoveEvent e, @NotNull LivingEntity user, int lvl) {
+	public void use(@NotNull PlayerMoveEvent e, @NotNull LivingEntity entity, int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
-		plugin.getNMSHandler().handleFlameWalker(user, user.getLocation(), lvl);
+		plugin.getNMSHandler().handleFlameWalker(entity, entity.getLocation(), lvl);
 	}
 
 	@Override

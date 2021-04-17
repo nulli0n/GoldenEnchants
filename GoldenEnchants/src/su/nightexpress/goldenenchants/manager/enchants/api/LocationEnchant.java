@@ -8,5 +8,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LocationEnchant {
 
-	void use(@NotNull ItemStack wpn, @Nullable Entity e, @NotNull Location loc, int lvl);
+	void use(@Nullable Entity entity, @NotNull Location loc, @NotNull ItemStack wpn, int lvl);
 }

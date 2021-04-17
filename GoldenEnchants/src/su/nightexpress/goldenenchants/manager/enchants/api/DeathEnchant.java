@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface DeathEnchant {
 
-	void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl);
+	void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity dead, int lvl);
 }

@@ -67,7 +67,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		
 		EnchantManager.getItemGoldenEnchants(wpn, CombatEnchant.class).forEach((combatEnchant, level) -> {
 			if (combatEnchant instanceof BowEnchant) return;
-			combatEnchant.use(wpn, damager, victim, e, level);
+			combatEnchant.use(e, damager, victim, wpn, level);
 		});
 	}
 	
@@ -103,7 +103,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 			if (ItemUT.isAir(armor)) continue;
 			
 			EnchantManager.getItemGoldenEnchants(armor, CombatEnchant.class).forEach((combatEnchant, level) -> {
-				combatEnchant.use(wpn, damager, victim, e, level);
+				combatEnchant.use(e, damager, victim, wpn, level);
 			});
 		}
 	}
@@ -125,7 +125,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		this.enchantManager.setArrowWeapon(pj, bow);
 		
 		EnchantManager.getItemGoldenEnchants(bow, BowEnchant.class).forEach((bowEnchant, level) -> {
-			bowEnchant.use(bow, shooter, e, level);
+			bowEnchant.use(e, shooter, bow, level);
 		});
 	}
 	
@@ -153,7 +153,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		
 		EnchantManager.getItemGoldenEnchants(wpn, CombatEnchant.class).forEach((combatEnchant, level) -> {
 			if (!(combatEnchant instanceof BowEnchant)) return;
-			combatEnchant.use(wpn, damager, victim, e, level);
+			combatEnchant.use(e, damager, victim, wpn, level);
 		});
 	}
 	
@@ -172,7 +172,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		
 		EnchantManager.getItemGoldenEnchants(wpn, LocationEnchant.class).forEach((locEnchant, level) -> {
 			if (!(locEnchant instanceof BowEnchant)) return;
-			locEnchant.use(wpn, projectile, block.getLocation(), level);
+			locEnchant.use(projectile, block.getLocation(), wpn, level);
 		});
 	}
 	
@@ -189,7 +189,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		
 		Player player = e.getPlayer();
 		EnchantManager.getItemGoldenEnchants(item, InteractEnchant.class).forEach((interEnchant, level) -> {
-			interEnchant.use(player, item, e, level);
+			interEnchant.use(e, player, item, level);
 		});
 	}
 	
@@ -203,7 +203,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 			if (armor == null || ItemUT.isAir(armor)) continue;
 			
 			EnchantManager.getItemGoldenEnchants(armor, DeathEnchant.class).forEach((deathEnchant, level) -> {
-				deathEnchant.use(dead, e, level);
+				deathEnchant.use(e, dead, level);
 			});
 		}
 		
@@ -214,7 +214,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (ItemUT.isAir(wpn) || wpn.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(wpn, DeathEnchant.class).forEach((deathEnchant, level) -> {
-			deathEnchant.use(dead, e, level);
+			deathEnchant.use(e, dead, level);
 		});
 	}
 
@@ -230,7 +230,7 @@ public class EnchantHandlerListener extends IListener<GoldenEnchants> {
 		if (ItemUT.isAir(tool) || tool.getType() == Material.ENCHANTED_BOOK) return;
 		
 		EnchantManager.getItemGoldenEnchants(tool, BlockEnchant.class).forEach((blockEnchant, level) -> {
-			blockEnchant.use(tool, player, e, level);
+			blockEnchant.use(e, player, tool, level);
 		});
 	}
 }

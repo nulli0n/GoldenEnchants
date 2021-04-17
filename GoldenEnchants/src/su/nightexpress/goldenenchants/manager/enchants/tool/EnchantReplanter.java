@@ -50,7 +50,7 @@ public class EnchantReplanter extends IEnchantChanceTemplate implements Interact
 	}
 
 	@Override
-	public void use(@NotNull Player player, @NotNull ItemStack item, @NotNull PlayerInteractEvent e, int lvl) {
+	public void use(@NotNull PlayerInteractEvent e, @NotNull Player player, @NotNull ItemStack item, int lvl) {
 		if (!this.replantOnRightClick) return;
 		
 		// Check for a event hand. We dont want to trigger it twice.
@@ -83,7 +83,7 @@ public class EnchantReplanter extends IEnchantChanceTemplate implements Interact
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e,
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
 			int lvl) {
 		
 		if (!this.replantOnPlantBreak) return;
@@ -107,7 +107,7 @@ public class EnchantReplanter extends IEnchantChanceTemplate implements Interact
 		}
 		
 		// Replant the gathered crops with a new one.
-		if (this.takeSeeds(p, plant.getMaterial())) {
+		if (this.takeSeeds(player, plant.getMaterial())) {
 			plugin.getServer().getScheduler().runTask(plugin, () -> {
 				blockPlant.setType(plant.getMaterial());
 				plant.setAge(0);

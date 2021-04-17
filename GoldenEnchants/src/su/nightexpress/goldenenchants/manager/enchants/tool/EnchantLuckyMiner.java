@@ -27,7 +27,7 @@ public class EnchantLuckyMiner extends IEnchantChanceTemplate implements BlockEn
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e,	int lvl) {
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,	int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		double expMod = this.getMapValue(this.expModifier, lvl, 1D);

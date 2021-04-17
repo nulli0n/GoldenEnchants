@@ -89,7 +89,7 @@ public class EnchantScavenger extends IEnchantChanceTemplate implements DeathEnc
 	}
 
 	@Override
-	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
+	public void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity dead, int lvl) {
 		Map<Material, Map.Entry<int[], Double>> items = this.loot.get(dead.getType());
 		if (items == null) return;
 		

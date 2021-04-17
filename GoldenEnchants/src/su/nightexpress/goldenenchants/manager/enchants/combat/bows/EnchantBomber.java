@@ -50,8 +50,8 @@ public class EnchantBomber extends IEnchantChanceTemplate implements BowEnchant 
 	}
 
 	@Override
-	public void use(@NotNull ItemStack bow, @NotNull LivingEntity shooter,
-			@NotNull EntityShootBowEvent e, int lvl) {
+	public void use(@NotNull EntityShootBowEvent e, @NotNull LivingEntity shooter,
+			@NotNull ItemStack bow, int lvl) {
 		
 		if (!this.checkTriggerChance(lvl)) return;
 		if (!(e.getProjectile() instanceof Projectile)) return;

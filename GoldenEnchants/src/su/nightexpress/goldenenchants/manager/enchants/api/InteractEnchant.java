@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface InteractEnchant {
 
-	void use(@NotNull Player player, @NotNull ItemStack item, @NotNull PlayerInteractEvent e, int lvl);
+	void use(@NotNull PlayerInteractEvent e, @NotNull Player player, @NotNull ItemStack item, int lvl);
 }

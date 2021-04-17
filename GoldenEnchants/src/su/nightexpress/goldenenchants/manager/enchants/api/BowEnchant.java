@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface BowEnchant {
 
-	void use(@NotNull ItemStack bow, @NotNull LivingEntity shooter, @NotNull EntityShootBowEvent e, int lvl);
+	void use(@NotNull EntityShootBowEvent e, @NotNull LivingEntity shooter, @NotNull ItemStack bow, int lvl);
 }

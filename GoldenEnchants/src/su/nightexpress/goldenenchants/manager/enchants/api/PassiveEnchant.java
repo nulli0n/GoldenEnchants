@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface PassiveEnchant {
 	
-	void use(@NotNull LivingEntity user, int lvl);
+	void use(@NotNull LivingEntity entity, int lvl);
 }

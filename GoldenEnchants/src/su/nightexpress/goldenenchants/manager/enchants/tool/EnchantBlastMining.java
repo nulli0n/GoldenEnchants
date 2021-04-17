@@ -5,8 +5,13 @@ import java.util.TreeMap;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
+import su.nightexpress.goldenenchants.manager.EnchantManager;
 import su.nightexpress.goldenenchants.manager.EnchantRegister;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
@@ -30,13 +36,13 @@ public class EnchantBlastMining extends IEnchantChanceTemplate implements BlockE
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e, int lvl) {
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item, int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		float power = (float) this.getMapValue(this.explosionPower, lvl, 3D);
 		
 		Block block = e.getBlock();
-		block.getWorld().createExplosion(block.getLocation(), power, false, true, p);
+		block.getWorld().createExplosion(block.getLocation(), power, false, true, player);
 	}
 
 	@Override
@@ -71,5 +77,20 @@ public class EnchantBlastMining extends IEnchantChanceTemplate implements BlockE
 	@Override
 	public boolean isTreasure() {
 		return false;
+	}
+	
+	// Do not damage around entities by en enchantment explosion.
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onBlastDamage(EntityDamageByEntityEvent e) {
+		if (e.getCause() != DamageCause.ENTITY_EXPLOSION) return;
+		
+		Entity eDamager = e.getDamager();
+		if (!(eDamager instanceof Player)) return;
+		
+		Player player = (Player) eDamager;
+		ItemStack pick = player.getInventory().getItemInMainHand();
+		if (EnchantManager.getEnchantLevel(pick, this) <= 0) return;
+		
+		e.setCancelled(true);
 	}
 }

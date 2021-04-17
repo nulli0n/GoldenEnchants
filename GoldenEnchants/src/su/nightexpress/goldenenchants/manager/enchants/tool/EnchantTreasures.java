@@ -97,7 +97,7 @@ public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnc
     }
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e,
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
 			int lvl) {
 		
 		if (!this.checkTriggerChance(lvl)) return;
@@ -105,11 +105,11 @@ public class EnchantTreasures extends IEnchantChanceTemplate implements BlockEnc
 		Block block = e.getBlock();
 		if (block.hasMetadata(META_USER_BLOCK)) return;
 		
-	    ItemStack item = this.getTreasure(block);
-	    if (item == null) return;
+	    ItemStack itemDrop = this.getTreasure(block);
+	    if (itemDrop == null) return;
 	    
 	    Location loc = LocUT.getCenter(block.getLocation());
-	    block.getWorld().dropItem(loc, item);
+	    block.getWorld().dropItem(loc, itemDrop);
 	    block.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_BELL, 0.7f, 0.7f);
 	    EffectUT.playEffect(loc, "VILLAGER_HAPPY", 0.2f, 0.2f, 0.2f, 0.12f, 20);
 	}

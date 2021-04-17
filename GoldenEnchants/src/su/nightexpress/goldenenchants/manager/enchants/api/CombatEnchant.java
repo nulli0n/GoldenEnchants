@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface CombatEnchant {
 
-	void use(@NotNull ItemStack weapon, @NotNull LivingEntity damager, @NotNull LivingEntity victim, @NotNull EntityDamageByEntityEvent e, int lvl);
+	void use(@NotNull EntityDamageByEntityEvent e, @NotNull LivingEntity damager, @NotNull LivingEntity victim, @NotNull ItemStack weapon, int lvl);
 }

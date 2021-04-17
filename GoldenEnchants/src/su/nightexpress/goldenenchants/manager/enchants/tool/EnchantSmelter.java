@@ -88,26 +88,26 @@ public class EnchantSmelter extends IEnchantChanceTemplate implements BlockEncha
     }
 	
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e,
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
 			int lvl) {
 		
 		if (!this.checkTriggerChance(lvl)) return;
 		
-		Block b = e.getBlock();
+		Block block = e.getBlock();
 		
-		Material result = this.smeltingTable.get(b.getType());
+		Material result = this.smeltingTable.get(block.getType());
     	if (result == null) return;
 		
-    	ItemStack item = new ItemStack(result);
+    	ItemStack itemSmelt = new ItemStack(result);
     	
 		e.setCancelled(true);
-	    b.setType(Material.AIR);
+	    block.setType(Material.AIR);
 	    
-	    Location loc = LocUT.getCenter(b.getLocation(), false);
-	    b.getWorld().dropItem(loc, item);
-		b.getWorld().playSound(loc, Sound.BLOCK_LAVA_EXTINGUISH, 0.7f, 0.7f);
+	    Location loc = LocUT.getCenter(block.getLocation(), false);
+	    block.getWorld().dropItem(loc, itemSmelt);
+		block.getWorld().playSound(loc, Sound.BLOCK_LAVA_EXTINGUISH, 0.7f, 0.7f);
 		EffectUT.playEffect(loc, "FLAME", 0.2f, 0.2f, 0.2f, 0.03f, 30);
 		
-		p.getInventory().setItemInMainHand(plugin.getNMS().damageItem(tool, 1, p));
+		player.getInventory().setItemInMainHand(plugin.getNMS().damageItem(itemSmelt, 1, player));
 	}
 }

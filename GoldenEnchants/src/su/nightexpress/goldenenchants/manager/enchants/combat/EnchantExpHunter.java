@@ -29,7 +29,7 @@ public class EnchantExpHunter extends IEnchantChanceTemplate implements DeathEnc
 	}
 	
 	@Override
-	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
+	public void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity dead, int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		double mod = this.getExpModifier(lvl);

@@ -1,5 +1,8 @@
 package su.nightexpress.goldenenchants.manager.enchants.tool;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -28,39 +31,54 @@ import su.nightexpress.goldenenchants.manager.enchants.api.BlockEnchant;
 
 public class EnchantSilkChest extends IEnchantChanceTemplate implements BlockEnchant {
 
-	private NamespacedKey keyItems;
+	private Map<Integer, NamespacedKey> keyItems;
 	private String chestName;
 	
 	public EnchantSilkChest(@NotNull GoldenEnchants plugin, @NotNull JYML cfg) {
 		super(plugin, cfg);
-		this.keyItems = new NamespacedKey(plugin, "silkchest_items");
+		this.keyItems = new TreeMap<>();
 		this.chestName = StringUT.color(cfg.getString("settings.chest-name", "%name% &7(%items% items)"));
+		
+		for (int pos = 0; pos < 27; pos++) {
+			this.getItemKey(pos);
+		}
+	}
+	
+	private NamespacedKey getItemKey(int pos) {
+		return this.keyItems.computeIfAbsent(pos, key -> new NamespacedKey(plugin, "silkchest_item_" + pos));
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player player, @NotNull BlockBreakEvent e, int lvl) {
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item, int lvl) {
 		Block block = e.getBlock();
 		BlockState state = block.getState();
 		if (!(state instanceof Chest)) return;
 		if (block.getType() == Material.ENDER_CHEST) return;
 		
 		Chest chest = (Chest) state;
-		StringBuilder itemData = new StringBuilder();
+		ItemStack chestItem = new ItemStack(block.getType());
 		
 		// Store and count chest items.
 		int amount = 0;
-		for (ItemStack item : chest.getInventory().getContents()) {
-			if (item == null) item = new ItemStack(Material.AIR);
+		int count = 0;
+		for (ItemStack itemInv : chest.getInventory().getContents()) {
+			if (itemInv == null) itemInv = new ItemStack(Material.AIR);
 			else amount++;
 			
-			if (itemData.length() > 0) itemData.append("_I_");
-			itemData.append(ItemUT.toBase64(item));
+			String base64 = ItemUT.toBase64(itemInv);
+			if (base64 == null) continue;
+			if (base64.length() >= Short.MAX_VALUE) {
+				block.getWorld().dropItemNaturally(block.getLocation(), itemInv);
+				continue;
+			}
+			
+			DataUT.setData(chestItem, this.getItemKey(count++), base64);
 		}
 		// Do not drop chest items.
 		chest.getInventory().clear();
 		
 		// Apply item meta name and items data string.
-		ItemStack chestItem = new ItemStack(block.getType());
+		
 		ItemMeta meta = chestItem.getItemMeta();
 		if (meta != null) {
 			String nameOrig = ItemUT.getItemName(chestItem);
@@ -68,7 +86,6 @@ public class EnchantSilkChest extends IEnchantChanceTemplate implements BlockEnc
 			meta.setDisplayName(nameChest);
 			chestItem.setItemMeta(meta);
 		}
-		DataUT.setData(chestItem, this.keyItems, itemData.toString());
 		
 		// Drop custom chest and do not drop the original one.
 		block.getWorld().dropItemNaturally(block.getLocation(), chestItem);
@@ -80,9 +97,6 @@ public class EnchantSilkChest extends IEnchantChanceTemplate implements BlockEnc
 		ItemStack item = e.getItemInHand();
 		if (ItemUT.isAir(item)) return;
 		
-		String itemData = DataUT.getStringData(item, this.keyItems);
-		if (itemData == null) return;
-		
 		Block block = e.getBlockPlaced();
 		BlockState state = block.getState();
 		if (!(state instanceof Chest)) return;
@@ -90,9 +104,11 @@ public class EnchantSilkChest extends IEnchantChanceTemplate implements BlockEnc
 		Chest chest = (Chest) state;
 		Inventory inventory = chest.getInventory();
 		
-		String[] itemSplit = itemData.split("_I_");
-		for (int pos = 0; pos < itemSplit.length; pos++) {
-			ItemStack itemInv = ItemUT.fromBase64(itemSplit[pos]);
+		for (int pos = 0; pos < inventory.getSize(); pos++) {
+			String data = DataUT.getStringData(item, this.getItemKey(pos));
+			if (data == null) continue;
+			
+			ItemStack itemInv = ItemUT.fromBase64(data);
 			inventory.setItem(pos, itemInv);
 		}
 	}

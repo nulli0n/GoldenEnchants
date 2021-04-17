@@ -74,22 +74,22 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e, int lvl) {
-		if (this.disableOnSneak && p.isSneaking()) return;
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item, int lvl) {
+		if (this.disableOnSneak && player.isSneaking()) return;
 		
-		if (p.hasMetadata(LOOP_FIX)) {
-			p.removeMetadata(LOOP_FIX, plugin);
+		if (player.hasMetadata(LOOP_FIX)) {
+			player.removeMetadata(LOOP_FIX, plugin);
 			return;
 		}
 		
 		if (!this.checkTriggerChance(lvl)) return;
 		
-		BlockFace dir = LocUT.getDirection(p);
+		BlockFace dir = LocUT.getDirection(player);
 		Block block = e.getBlock();
 		
 		// Redstone ore seems to be 'interactable'.
 		if (block.getType().isInteractable() && block.getType() != Material.REDSTONE_ORE) return;
-		if (block.getDrops(tool).isEmpty()) return;
+		if (block.getDrops(item).isEmpty()) return;
 		
 		boolean isY = dir != null && block.getRelative(dir.getOppositeFace()).isEmpty();
 		boolean isZ = dir == BlockFace.EAST || dir == BlockFace.WEST;
@@ -108,7 +108,7 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 		
 		int expDrop = e.getExpToDrop();
 		for (int i = 0; i < blocksBroken; i++) {
-			if (ItemUT.isAir(tool)) break;
+			if (ItemUT.isAir(item)) break;
 			
 			int xAdd = MINING_COORD_OFFSETS[i][0];
 			int zAdd = MINING_COORD_OFFSETS[i][1];
@@ -122,7 +122,7 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			}
 			
 			// Skip blocks that should not be mined
-			if (blockAdd.getDrops(tool).isEmpty()) continue;
+			if (blockAdd.getDrops(item).isEmpty()) continue;
 			if (blockAdd.isLiquid()) continue;
 			
 			Material addType = blockAdd.getType();
@@ -132,15 +132,15 @@ public class EnchantTunnel extends IEnchantChanceTemplate implements BlockEnchan
 			if (addType == Material.OBSIDIAN && addType != block.getType()) continue;
 
 			// Add metadata to tool to prevent new block breaking event from triggering mining again
-			p.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, true));
+			player.setMetadata(LOOP_FIX, new FixedMetadataValue(plugin, true));
 			
-			BlockBreakEvent event = new BlockBreakEvent(blockAdd, p);
+			BlockBreakEvent event = new BlockBreakEvent(blockAdd, player);
 			plugin.getPluginManager().callEvent(event);
 			if (event.isCancelled()) continue;
 			
-			if (!blockAdd.breakNaturally(tool)) continue;
+			if (!blockAdd.breakNaturally(item)) continue;
 			
-			p.getInventory().setItemInMainHand(tool = plugin.getNMS().damageItem(tool, 1, p));
+			player.getInventory().setItemInMainHand(item = plugin.getNMS().damageItem(item, 1, player));
 			
 			// Add Exp from mined blocks.
 			expDrop += event.getExpToDrop();

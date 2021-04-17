@@ -33,8 +33,8 @@ public class EnchantPigificator extends IEnchantChanceTemplate implements Combat
 	}
 
 	@Override
-	public void use(@NotNull ItemStack weapon, @NotNull LivingEntity damager,
-			@NotNull LivingEntity victim, @NotNull EntityDamageByEntityEvent e, int lvl) {
+	public void use(@NotNull EntityDamageByEntityEvent e, @NotNull LivingEntity damager,
+			@NotNull LivingEntity victim, @NotNull ItemStack weapon, int lvl) {
 		
 		if (!(victim instanceof PigZombie)) return;
 		if (!this.checkTriggerChance(lvl)) return;

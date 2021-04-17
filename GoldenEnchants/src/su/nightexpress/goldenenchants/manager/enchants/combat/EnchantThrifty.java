@@ -70,7 +70,7 @@ public class EnchantThrifty extends IEnchantChanceTemplate implements DeathEncha
 	}
 
 	@Override
-	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
+	public void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity dead, int lvl) {
 		if (this.entityBlacklist.contains(dead.getType().name())) return;
 		if (dead.hasMetadata(META_SETTING_SPAWN_REASON)) return;
 		if (!this.checkTriggerChance(lvl)) return;

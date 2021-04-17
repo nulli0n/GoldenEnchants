@@ -68,7 +68,7 @@ public class EnchantExecutioner extends IEnchantChanceTemplate implements DeathE
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void use(@NotNull LivingEntity victim, @NotNull EntityDeathEvent e, int lvl) {
+	public void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity victim, int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		ItemStack item;

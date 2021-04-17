@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface MoveEnchant {
 
-	void use(@NotNull PlayerMoveEvent e, @NotNull LivingEntity user, int lvl);
+	void use(@NotNull PlayerMoveEvent e, @NotNull LivingEntity entity, int lvl);
 }

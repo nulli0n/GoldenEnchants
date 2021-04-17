@@ -65,7 +65,7 @@ public class EnchantDivineTouch extends IEnchantChanceTemplate implements BlockE
 	}
 
 	@Override
-	public void use(@NotNull ItemStack tool, @NotNull Player p, @NotNull BlockBreakEvent e,
+	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
 			int lvl) {
 		
 		Block b = e.getBlock();

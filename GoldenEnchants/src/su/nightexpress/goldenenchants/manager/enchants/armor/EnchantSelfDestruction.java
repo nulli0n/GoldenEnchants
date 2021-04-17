@@ -28,7 +28,7 @@ public class EnchantSelfDestruction extends IEnchantChanceTemplate implements De
 	}
 	
 	@Override
-	public void use(@NotNull LivingEntity dead, @NotNull EntityDeathEvent e, int lvl) {
+	public void use(@NotNull EntityDeathEvent e, @NotNull LivingEntity dead, int lvl) {
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		double size = this.getExplosionSize(lvl);
