@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.utils.NumberUT;
 import su.nightexpress.goldenenchants.GoldenEnchants;
 import su.nightexpress.goldenenchants.manager.enchants.IEnchantChanceTemplate;
 import su.nightexpress.goldenenchants.manager.enchants.api.PassiveEnchant;
@@ -25,6 +26,13 @@ public class EnchantSaturation extends IEnchantChanceTemplate implements Passive
 		
 		this.saturationAmount = new TreeMap<>();
 		this.loadMapValues(this.saturationAmount, "settings.saturation-amount");
+	}
+	
+	@Override
+	@NotNull
+	public String getDescription(int lvl) {
+		return super.getDescription(lvl)
+				.replace("%amount%", NumberUT.format(this.getSaturationAmount(lvl)));
 	}
 	
 	@Override

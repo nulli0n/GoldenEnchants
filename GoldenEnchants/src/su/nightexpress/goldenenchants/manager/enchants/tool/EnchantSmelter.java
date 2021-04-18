@@ -72,20 +72,6 @@ public class EnchantSmelter extends IEnchantChanceTemplate implements BlockEncha
 	public boolean isTreasure() {
 		return false;
 	}
-
-    public void smeltBlock(@NotNull Block b) {
-    	Material result = this.smeltingTable.get(b.getType());
-    	if (result == null) return;
-    	
-    	ItemStack item = new ItemStack(result);
-    	for (ItemStack drop : b.getDrops()) {
-    		if (drop.getType() == b.getType()) {
-    			b.getDrops().remove(drop);
-    			break;
-    		}
-    	}
-    	b.getDrops().add(item);
-    }
 	
 	@Override
 	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
@@ -108,6 +94,6 @@ public class EnchantSmelter extends IEnchantChanceTemplate implements BlockEncha
 		block.getWorld().playSound(loc, Sound.BLOCK_LAVA_EXTINGUISH, 0.7f, 0.7f);
 		EffectUT.playEffect(loc, "FLAME", 0.2f, 0.2f, 0.2f, 0.03f, 30);
 		
-		player.getInventory().setItemInMainHand(plugin.getNMS().damageItem(itemSmelt, 1, player));
+		player.getInventory().setItemInMainHand(plugin.getNMS().damageItem(item, 1, player));
 	}
 }
