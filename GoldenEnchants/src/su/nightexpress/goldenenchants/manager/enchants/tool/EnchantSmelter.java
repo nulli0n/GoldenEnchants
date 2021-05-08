@@ -77,6 +77,7 @@ public class EnchantSmelter extends IEnchantChanceTemplate implements BlockEncha
 	public void use(@NotNull BlockBreakEvent e, @NotNull Player player, @NotNull ItemStack item,
 			int lvl) {
 		
+	    if (!e.isDropItems()) return;
 		if (!this.checkTriggerChance(lvl)) return;
 		
 		Block block = e.getBlock();

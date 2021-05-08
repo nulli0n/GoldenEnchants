@@ -35,7 +35,6 @@ import su.nightexpress.goldenenchants.manager.tasks.PassiveEnchantsTask;
 public class EnchantManager extends IManager<GoldenEnchants> {
 	
 	private Set<IListener<GoldenEnchants>> listeners;
-	public EnchantPopulator populator;
 	
 	private ArrowTrailsTask arrowTrailsTask;
 	private PassiveEnchantsTask passiveEnchantsTask;
@@ -54,11 +53,6 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 		this.listeners.add(new EnchantHandlerListener(this));
 		this.listeners.add(new EnchantGenericListener(this));
 		this.listeners.forEach(listener -> listener.registerListeners());
-		
-		if (Config.LOOTGEN_ENABLED) {
-			this.populator = new EnchantPopulator();
-			this.plugin.getServer().getWorlds().forEach(world -> world.getPopulators().add(populator));
-		}
 		
 		this.arrowTrailsTask = new ArrowTrailsTask(this.plugin);
 		this.arrowTrailsTask.start();
@@ -81,10 +75,6 @@ public class EnchantManager extends IManager<GoldenEnchants> {
 			this.listeners.forEach(listener -> listener.unregisterListeners());
 			this.listeners.clear();
 			this.listeners = null;
-		}
-		if (this.populator != null) {
-			this.plugin.getServer().getWorlds().forEach(world -> world.getPopulators().remove(this.populator));
-			this.populator = null;
 		}
 		
 		EnchantRegister.shutdown();

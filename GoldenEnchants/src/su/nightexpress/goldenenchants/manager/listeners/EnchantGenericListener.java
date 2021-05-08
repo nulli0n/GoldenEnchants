@@ -3,6 +3,9 @@ package su.nightexpress.goldenenchants.manager.listeners;
 import java.util.Map;
 
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,7 +14,9 @@ import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -38,6 +43,22 @@ public class EnchantGenericListener extends IListener<GoldenEnchants> {
 		//this.enchantManager = enchantManager;
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onLoot(LootGenerateEvent e) {
+	    if (!Config.LOOTGEN_ENABLED) return;
+	    
+	    Entity entity = e.getEntity();
+	    InventoryHolder holder = e.getInventoryHolder();
+	    
+	    if (entity instanceof Minecart || holder instanceof Chest) {
+    	    e.getLoot().forEach(item -> {
+    	        if (item != null && EnchantManager.isEnchantable(item)) {
+    	            EnchantManager.populateEnchantments(item, ObtainType.LOOT_GENERATION);
+    	        }
+    	    });
+	    }
+	}
+	
 	// ---------------------------------------------------------------
 	// Handle Anvil
 	// ---------------------------------------------------------------
